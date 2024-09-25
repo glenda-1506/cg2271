@@ -4,13 +4,6 @@ Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
 
 Section Cross References
 
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(i.OffAllFrontLeds) for OffAllFrontLeds
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(i.OnFrontLed) for OnFrontLed
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(i.OffFrontLed) for OffFrontLed
-    myblinky.o(i.HandleFrontLed) refers to aeabi_sdiv.o(.text) for __aeabi_idivmod
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(i.OnAllFrontLeds) for OnAllFrontLeds
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(i.delay) for delay
-    myblinky.o(i.HandleFrontLed) refers to myblinky.o(.data) for g_isMoving
     myblinky.o(i.HandleFrontLeds) refers to myblinky.o(i.OffAllFrontLeds) for OffAllFrontLeds
     myblinky.o(i.HandleFrontLeds) refers to myblinky.o(i.OnFrontLed) for OnFrontLed
     myblinky.o(i.HandleFrontLeds) refers to myblinky.o(i.delay) for delay
@@ -18,23 +11,30 @@ Section Cross References
     myblinky.o(i.HandleFrontLeds) refers to myblinky.o(i.OnAllFrontLeds) for OnAllFrontLeds
     myblinky.o(i.HandleFrontLeds) refers to aeabi_sdiv.o(.text) for __aeabi_idivmod
     myblinky.o(i.HandleFrontLeds) refers to myblinky.o(.data) for g_isMoving
+    myblinky.o(i.InitBackLedTimer) refers to myblinky.o(i.__NVIC_SetPriority) for __NVIC_SetPriority
+    myblinky.o(i.InitBackLedTimer) refers to myblinky.o(i.__NVIC_ClearPendingIRQ) for __NVIC_ClearPendingIRQ
+    myblinky.o(i.InitBackLedTimer) refers to myblinky.o(i.__NVIC_EnableIRQ) for __NVIC_EnableIRQ
     myblinky.o(i.InitGPIO) refers to myblinky.o(.data) for g_frontLeds
     myblinky.o(i.InitSwitch) refers to myblinky.o(i.__NVIC_SetPriority) for __NVIC_SetPriority
     myblinky.o(i.InitSwitch) refers to myblinky.o(i.__NVIC_ClearPendingIRQ) for __NVIC_ClearPendingIRQ
+    myblinky.o(i.InitSwitch) refers to myblinky.o(i.__NVIC_EnableIRQ) for __NVIC_EnableIRQ
     myblinky.o(i.OffAllFrontLeds) refers to myblinky.o(i.OffFrontLed) for OffFrontLed
     myblinky.o(i.OffAllFrontLeds) refers to myblinky.o(.data) for g_frontLeds
     myblinky.o(i.OnAllFrontLeds) refers to myblinky.o(i.OnFrontLed) for OnFrontLed
     myblinky.o(i.OnAllFrontLeds) refers to myblinky.o(.data) for g_frontLeds
     myblinky.o(i.PORTD_IRQHandler) refers to myblinky.o(i.__NVIC_ClearPendingIRQ) for __NVIC_ClearPendingIRQ
     myblinky.o(i.PORTD_IRQHandler) refers to myblinky.o(.data) for g_isMoving
+    myblinky.o(i.TPM0_IRQHandler) refers to myblinky.o(.data) for g_overflowCounter
     myblinky.o(i.main) refers to myblinky.o(i.InitGPIO) for InitGPIO
     myblinky.o(i.main) refers to myblinky.o(i.InitSwitch) for InitSwitch
+    myblinky.o(i.main) refers to myblinky.o(i.InitBackLedTimer) for InitBackLedTimer
     myblinky.o(i.main) refers to myblinky.o(i.HandleFrontLeds) for HandleFrontLeds
     startup_mkl25z4.o(STACK) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup_mkl25z4.o(HEAP) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup_mkl25z4.o(RESET) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup_mkl25z4.o(RESET) refers to startup_mkl25z4.o(STACK) for __initial_sp
     startup_mkl25z4.o(RESET) refers to startup_mkl25z4.o(.text) for Reset_Handler
+    startup_mkl25z4.o(RESET) refers to myblinky.o(i.TPM0_IRQHandler) for TPM0_IRQHandler
     startup_mkl25z4.o(RESET) refers to myblinky.o(i.PORTD_IRQHandler) for PORTD_IRQHandler
     startup_mkl25z4.o(.ARM.__at_0x400) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup_mkl25z4.o(.text) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
@@ -158,14 +158,15 @@ Removing Unused input sections from the image.
 
     Removing myblinky.o(.rev16_text), (4 bytes).
     Removing myblinky.o(.revsh_text), (4 bytes).
-    Removing myblinky.o(i.HandleFrontLed), (132 bytes).
+    Removing myblinky.o(i.OffAllBackLeds), (20 bytes).
+    Removing myblinky.o(i.OnAllBackLeds), (20 bytes).
     Removing system_mkl25z4.o(.rev16_text), (4 bytes).
     Removing system_mkl25z4.o(.revsh_text), (4 bytes).
     Removing system_mkl25z4.o(i.SystemCoreClockUpdate), (400 bytes).
     Removing system_mkl25z4.o(.data), (4 bytes).
     Removing system_mkl25z4.o(i.__ARM_common_switch8), (28 bytes).
 
-8 unused section(s) (total 580 bytes) removed from the image.
+9 unused section(s) (total 488 bytes) removed from the image.
 
 ==============================================================================
 
@@ -176,58 +177,58 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     RESET                                    0x00000000   Section      192  startup_mkl25z4.o(RESET)
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_zi.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit.o ABSOLUTE
+    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit2.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry4.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry2.o ABSOLUTE
-    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry.o ABSOLUTE
+    ../clib/angel/rt.s                       0x00000000   Number         0  aeabi_idiv0_sigfpe.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_div0.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_raise.o ABSOLUTE
-    ../clib/angel/rt.s                       0x00000000   Number         0  aeabi_idiv0_sigfpe.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  aeabi_idiv0.o ABSOLUTE
     ../clib/angel/scatterp.s                 0x00000000   Number         0  __scatter.o ABSOLUTE
     ../clib/angel/startup.s                  0x00000000   Number         0  __main.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  sys_stackheap_outer.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  tempstk.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
-    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_wrch.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_command.o ABSOLUTE
-    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
+    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  no_argv.o ABSOLUTE
-    ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv_div0.o ABSOLUTE
+    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv.o ABSOLUTE
+    ../clib/division.s                       0x00000000   Number         0  aeabi_sdiv_div0.o ABSOLUTE
     ../clib/heapalloc.c                      0x00000000   Number         0  hrguard.o ABSOLUTE
     ../clib/heapaux.c                        0x00000000   Number         0  heapauxi.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libshutdown.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libinit2.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libshutdown.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_outer.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_formal.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_pvfn_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
     ../clib/signal.s                         0x00000000   Number         0  defsig.o ABSOLUTE
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
     ../fplib/cfplib/fpinit.c                 0x00000000   Number         0  fpinit.o ABSOLUTE
@@ -295,26 +296,30 @@ Image Symbol Table
     i.OffAllFrontLeds                        0x000003d4   Section        0  myblinky.o(i.OffAllFrontLeds)
     i.SystemInit                             0x000003f4   Section        0  system_mkl25z4.o(i.SystemInit)
     .ARM.__at_0x400                          0x00000400   Section       16  startup_mkl25z4.o(.ARM.__at_0x400)
-    i.InitGPIO                               0x00000410   Section        0  myblinky.o(i.InitGPIO)
-    i.InitSwitch                             0x00000504   Section        0  myblinky.o(i.InitSwitch)
-    i.OffFrontLed                            0x0000056c   Section        0  myblinky.o(i.OffFrontLed)
-    i.OnAllFrontLeds                         0x00000598   Section        0  myblinky.o(i.OnAllFrontLeds)
-    i.OnFrontLed                             0x000005b8   Section        0  myblinky.o(i.OnFrontLed)
-    i.PORTD_IRQHandler                       0x000005e4   Section        0  myblinky.o(i.PORTD_IRQHandler)
-    i.__NVIC_ClearPendingIRQ                 0x00000614   Section        0  myblinky.o(i.__NVIC_ClearPendingIRQ)
-    __NVIC_ClearPendingIRQ                   0x00000615   Thumb Code    18  myblinky.o(i.__NVIC_ClearPendingIRQ)
-    i.__NVIC_SetPriority                     0x0000062c   Section        0  myblinky.o(i.__NVIC_SetPriority)
-    __NVIC_SetPriority                       0x0000062d   Thumb Code   110  myblinky.o(i.__NVIC_SetPriority)
-    i.delay                                  0x000006a4   Section        0  myblinky.o(i.delay)
-    delay                                    0x000006a5   Thumb Code    20  myblinky.o(i.delay)
-    i.main                                   0x000006b8   Section        0  myblinky.o(i.main)
-    .data                                    0x1ffff000   Section       52  myblinky.o(.data)
-    .bss                                     0x1ffff034   Section       96  libspace.o(.bss)
-    HEAP                                     0x1ffff098   Section        0  startup_mkl25z4.o(HEAP)
-    STACK                                    0x1ffff098   Section      256  startup_mkl25z4.o(STACK)
-    Heap_Mem                                 0x1ffff098   Data           0  startup_mkl25z4.o(HEAP)
-    Stack_Mem                                0x1ffff098   Data         256  startup_mkl25z4.o(STACK)
-    __initial_sp                             0x1ffff198   Data           0  startup_mkl25z4.o(STACK)
+    i.InitBackLedTimer                       0x00000410   Section        0  myblinky.o(i.InitBackLedTimer)
+    i.InitGPIO                               0x000004c4   Section        0  myblinky.o(i.InitGPIO)
+    i.InitSwitch                             0x000005b8   Section        0  myblinky.o(i.InitSwitch)
+    i.OffFrontLed                            0x00000608   Section        0  myblinky.o(i.OffFrontLed)
+    i.OnAllFrontLeds                         0x00000634   Section        0  myblinky.o(i.OnAllFrontLeds)
+    i.OnFrontLed                             0x00000654   Section        0  myblinky.o(i.OnFrontLed)
+    i.PORTD_IRQHandler                       0x00000680   Section        0  myblinky.o(i.PORTD_IRQHandler)
+    i.TPM0_IRQHandler                        0x000006cc   Section        0  myblinky.o(i.TPM0_IRQHandler)
+    i.__NVIC_ClearPendingIRQ                 0x00000734   Section        0  myblinky.o(i.__NVIC_ClearPendingIRQ)
+    __NVIC_ClearPendingIRQ                   0x00000735   Thumb Code    18  myblinky.o(i.__NVIC_ClearPendingIRQ)
+    i.__NVIC_EnableIRQ                       0x0000074c   Section        0  myblinky.o(i.__NVIC_EnableIRQ)
+    __NVIC_EnableIRQ                         0x0000074d   Thumb Code    26  myblinky.o(i.__NVIC_EnableIRQ)
+    i.__NVIC_SetPriority                     0x0000076c   Section        0  myblinky.o(i.__NVIC_SetPriority)
+    __NVIC_SetPriority                       0x0000076d   Thumb Code   110  myblinky.o(i.__NVIC_SetPriority)
+    i.delay                                  0x000007e4   Section        0  myblinky.o(i.delay)
+    delay                                    0x000007e5   Thumb Code    20  myblinky.o(i.delay)
+    i.main                                   0x000007f8   Section        0  myblinky.o(i.main)
+    .data                                    0x1ffff000   Section       60  myblinky.o(.data)
+    .bss                                     0x1ffff03c   Section       96  libspace.o(.bss)
+    HEAP                                     0x1ffff0a0   Section        0  startup_mkl25z4.o(HEAP)
+    STACK                                    0x1ffff0a0   Section      256  startup_mkl25z4.o(STACK)
+    Heap_Mem                                 0x1ffff0a0   Data           0  startup_mkl25z4.o(HEAP)
+    Stack_Mem                                0x1ffff0a0   Data         256  startup_mkl25z4.o(STACK)
+    __initial_sp                             0x1ffff1a0   Data           0  startup_mkl25z4.o(STACK)
 
     Global Symbols
 
@@ -431,7 +436,6 @@ Image Symbol Table
     Reserved45_IRQHandler                    0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
     SPI0_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
     SPI1_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
-    TPM0_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
     TPM1_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
     TPM2_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
     TSI0_IRQHandler                          0x0000017b   Thumb Code     0  startup_mkl25z4.o(.text)
@@ -459,21 +463,25 @@ Image Symbol Table
     HandleFrontLeds                          0x0000036d   Thumb Code    88  myblinky.o(i.HandleFrontLeds)
     OffAllFrontLeds                          0x000003d5   Thumb Code    26  myblinky.o(i.OffAllFrontLeds)
     SystemInit                               0x000003f5   Thumb Code     8  system_mkl25z4.o(i.SystemInit)
-    InitGPIO                                 0x00000411   Thumb Code   224  myblinky.o(i.InitGPIO)
-    InitSwitch                               0x00000505   Thumb Code    84  myblinky.o(i.InitSwitch)
-    OffFrontLed                              0x0000056d   Thumb Code    40  myblinky.o(i.OffFrontLed)
-    OnAllFrontLeds                           0x00000599   Thumb Code    26  myblinky.o(i.OnAllFrontLeds)
-    OnFrontLed                               0x000005b9   Thumb Code    40  myblinky.o(i.OnFrontLed)
-    PORTD_IRQHandler                         0x000005e5   Thumb Code    40  myblinky.o(i.PORTD_IRQHandler)
-    main                                     0x000006b9   Thumb Code    16  myblinky.o(i.main)
-    Region$$Table$$Base                      0x000006c8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x000006e8   Number         0  anon$$obj.o(Region$$Table)
+    InitBackLedTimer                         0x00000411   Thumb Code   162  myblinky.o(i.InitBackLedTimer)
+    InitGPIO                                 0x000004c5   Thumb Code   224  myblinky.o(i.InitGPIO)
+    InitSwitch                               0x000005b9   Thumb Code    62  myblinky.o(i.InitSwitch)
+    OffFrontLed                              0x00000609   Thumb Code    40  myblinky.o(i.OffFrontLed)
+    OnAllFrontLeds                           0x00000635   Thumb Code    26  myblinky.o(i.OnAllFrontLeds)
+    OnFrontLed                               0x00000655   Thumb Code    40  myblinky.o(i.OnFrontLed)
+    PORTD_IRQHandler                         0x00000681   Thumb Code    62  myblinky.o(i.PORTD_IRQHandler)
+    TPM0_IRQHandler                          0x000006cd   Thumb Code    82  myblinky.o(i.TPM0_IRQHandler)
+    main                                     0x000007f9   Thumb Code    20  myblinky.o(i.main)
+    Region$$Table$$Base                      0x0000080c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0000082c   Number         0  anon$$obj.o(Region$$Table)
     g_frontLeds                              0x1ffff000   Data          40  myblinky.o(.data)
     g_isMoving                               0x1ffff028   Data           4  myblinky.o(.data)
-    currentFrontLed                          0x1ffff02c   Data           4  myblinky.o(.data)
-    ledState                                 0x1ffff030   Data           4  myblinky.o(.data)
-    __libspace_start                         0x1ffff034   Data          96  libspace.o(.bss)
-    __temporary_stack_top$libspace           0x1ffff094   Data           0  libspace.o(.bss)
+    g_currentFrontLed                        0x1ffff02c   Data           4  myblinky.o(.data)
+    g_backLedCycle                           0x1ffff030   Data           4  myblinky.o(.data)
+    g_overflowCounter                        0x1ffff034   Data           4  myblinky.o(.data)
+    g_backLedIsOn                            0x1ffff038   Data           4  myblinky.o(.data)
+    __libspace_start                         0x1ffff03c   Data          96  libspace.o(.bss)
+    __temporary_stack_top$libspace           0x1ffff09c   Data           0  libspace.o(.bss)
 
 
 
@@ -483,103 +491,106 @@ Memory Map of the image
 
   Image Entry point : 0x00000165
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x0000071c, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000868, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x000006e8, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x0000082c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x00000000   0x00000000   0x000000c0   Data   RO          120    RESET               startup_mkl25z4.o
-    0x000000c0   0x000000c0   0x00000008   Code   RO          173  * !!!main             c_p.l(__main.o)
-    0x000000c8   0x000000c8   0x0000003c   Code   RO          342    !!!scatter          c_p.l(__scatter.o)
-    0x00000104   0x00000104   0x0000001a   Code   RO          344    !!handler_copy      c_p.l(__scatter_copy.o)
+    0x00000000   0x00000000   0x000000c0   Data   RO          143    RESET               startup_mkl25z4.o
+    0x000000c0   0x000000c0   0x00000008   Code   RO          196  * !!!main             c_p.l(__main.o)
+    0x000000c8   0x000000c8   0x0000003c   Code   RO          365    !!!scatter          c_p.l(__scatter.o)
+    0x00000104   0x00000104   0x0000001a   Code   RO          367    !!handler_copy      c_p.l(__scatter_copy.o)
     0x0000011e   0x0000011e   0x00000002   PAD
-    0x00000120   0x00000120   0x0000001c   Code   RO          346    !!handler_zi        c_p.l(__scatter_zi.o)
-    0x0000013c   0x0000013c   0x00000002   Code   RO          211    .ARM.Collect$$libinit$$00000000  c_p.l(libinit.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          225    .ARM.Collect$$libinit$$00000002  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          227    .ARM.Collect$$libinit$$00000004  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          230    .ARM.Collect$$libinit$$0000000A  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          232    .ARM.Collect$$libinit$$0000000C  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          234    .ARM.Collect$$libinit$$0000000E  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          237    .ARM.Collect$$libinit$$00000011  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          239    .ARM.Collect$$libinit$$00000013  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          241    .ARM.Collect$$libinit$$00000015  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          243    .ARM.Collect$$libinit$$00000017  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          245    .ARM.Collect$$libinit$$00000019  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          247    .ARM.Collect$$libinit$$0000001B  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          249    .ARM.Collect$$libinit$$0000001D  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          251    .ARM.Collect$$libinit$$0000001F  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          253    .ARM.Collect$$libinit$$00000021  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          255    .ARM.Collect$$libinit$$00000023  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          257    .ARM.Collect$$libinit$$00000025  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          261    .ARM.Collect$$libinit$$0000002C  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          263    .ARM.Collect$$libinit$$0000002E  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          265    .ARM.Collect$$libinit$$00000030  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000000   Code   RO          267    .ARM.Collect$$libinit$$00000032  c_p.l(libinit2.o)
-    0x0000013e   0x0000013e   0x00000002   Code   RO          268    .ARM.Collect$$libinit$$00000033  c_p.l(libinit2.o)
-    0x00000140   0x00000140   0x00000002   Code   RO          299    .ARM.Collect$$libshutdown$$00000000  c_p.l(libshutdown.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          325    .ARM.Collect$$libshutdown$$00000002  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          327    .ARM.Collect$$libshutdown$$00000004  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          330    .ARM.Collect$$libshutdown$$00000007  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          333    .ARM.Collect$$libshutdown$$0000000A  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          335    .ARM.Collect$$libshutdown$$0000000C  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000000   Code   RO          338    .ARM.Collect$$libshutdown$$0000000F  c_p.l(libshutdown2.o)
-    0x00000142   0x00000142   0x00000002   Code   RO          339    .ARM.Collect$$libshutdown$$00000010  c_p.l(libshutdown2.o)
-    0x00000144   0x00000144   0x00000000   Code   RO          175    .ARM.Collect$$rtentry$$00000000  c_p.l(__rtentry.o)
-    0x00000144   0x00000144   0x00000000   Code   RO          181    .ARM.Collect$$rtentry$$00000002  c_p.l(__rtentry2.o)
-    0x00000144   0x00000144   0x00000006   Code   RO          193    .ARM.Collect$$rtentry$$00000004  c_p.l(__rtentry4.o)
-    0x0000014a   0x0000014a   0x00000000   Code   RO          183    .ARM.Collect$$rtentry$$00000009  c_p.l(__rtentry2.o)
-    0x0000014a   0x0000014a   0x00000004   Code   RO          184    .ARM.Collect$$rtentry$$0000000A  c_p.l(__rtentry2.o)
-    0x0000014e   0x0000014e   0x00000000   Code   RO          186    .ARM.Collect$$rtentry$$0000000C  c_p.l(__rtentry2.o)
-    0x0000014e   0x0000014e   0x00000008   Code   RO          187    .ARM.Collect$$rtentry$$0000000D  c_p.l(__rtentry2.o)
-    0x00000156   0x00000156   0x00000002   Code   RO          216    .ARM.Collect$$rtexit$$00000000  c_p.l(rtexit.o)
-    0x00000158   0x00000158   0x00000000   Code   RO          272    .ARM.Collect$$rtexit$$00000002  c_p.l(rtexit2.o)
-    0x00000158   0x00000158   0x00000004   Code   RO          273    .ARM.Collect$$rtexit$$00000003  c_p.l(rtexit2.o)
-    0x0000015c   0x0000015c   0x00000006   Code   RO          274    .ARM.Collect$$rtexit$$00000004  c_p.l(rtexit2.o)
+    0x00000120   0x00000120   0x0000001c   Code   RO          369    !!handler_zi        c_p.l(__scatter_zi.o)
+    0x0000013c   0x0000013c   0x00000002   Code   RO          234    .ARM.Collect$$libinit$$00000000  c_p.l(libinit.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          248    .ARM.Collect$$libinit$$00000002  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          250    .ARM.Collect$$libinit$$00000004  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          253    .ARM.Collect$$libinit$$0000000A  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          255    .ARM.Collect$$libinit$$0000000C  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          257    .ARM.Collect$$libinit$$0000000E  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          260    .ARM.Collect$$libinit$$00000011  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          262    .ARM.Collect$$libinit$$00000013  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          264    .ARM.Collect$$libinit$$00000015  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          266    .ARM.Collect$$libinit$$00000017  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          268    .ARM.Collect$$libinit$$00000019  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          270    .ARM.Collect$$libinit$$0000001B  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          272    .ARM.Collect$$libinit$$0000001D  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          274    .ARM.Collect$$libinit$$0000001F  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          276    .ARM.Collect$$libinit$$00000021  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          278    .ARM.Collect$$libinit$$00000023  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          280    .ARM.Collect$$libinit$$00000025  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          284    .ARM.Collect$$libinit$$0000002C  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          286    .ARM.Collect$$libinit$$0000002E  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          288    .ARM.Collect$$libinit$$00000030  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000000   Code   RO          290    .ARM.Collect$$libinit$$00000032  c_p.l(libinit2.o)
+    0x0000013e   0x0000013e   0x00000002   Code   RO          291    .ARM.Collect$$libinit$$00000033  c_p.l(libinit2.o)
+    0x00000140   0x00000140   0x00000002   Code   RO          322    .ARM.Collect$$libshutdown$$00000000  c_p.l(libshutdown.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          348    .ARM.Collect$$libshutdown$$00000002  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          350    .ARM.Collect$$libshutdown$$00000004  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          353    .ARM.Collect$$libshutdown$$00000007  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          356    .ARM.Collect$$libshutdown$$0000000A  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          358    .ARM.Collect$$libshutdown$$0000000C  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000000   Code   RO          361    .ARM.Collect$$libshutdown$$0000000F  c_p.l(libshutdown2.o)
+    0x00000142   0x00000142   0x00000002   Code   RO          362    .ARM.Collect$$libshutdown$$00000010  c_p.l(libshutdown2.o)
+    0x00000144   0x00000144   0x00000000   Code   RO          198    .ARM.Collect$$rtentry$$00000000  c_p.l(__rtentry.o)
+    0x00000144   0x00000144   0x00000000   Code   RO          204    .ARM.Collect$$rtentry$$00000002  c_p.l(__rtentry2.o)
+    0x00000144   0x00000144   0x00000006   Code   RO          216    .ARM.Collect$$rtentry$$00000004  c_p.l(__rtentry4.o)
+    0x0000014a   0x0000014a   0x00000000   Code   RO          206    .ARM.Collect$$rtentry$$00000009  c_p.l(__rtentry2.o)
+    0x0000014a   0x0000014a   0x00000004   Code   RO          207    .ARM.Collect$$rtentry$$0000000A  c_p.l(__rtentry2.o)
+    0x0000014e   0x0000014e   0x00000000   Code   RO          209    .ARM.Collect$$rtentry$$0000000C  c_p.l(__rtentry2.o)
+    0x0000014e   0x0000014e   0x00000008   Code   RO          210    .ARM.Collect$$rtentry$$0000000D  c_p.l(__rtentry2.o)
+    0x00000156   0x00000156   0x00000002   Code   RO          239    .ARM.Collect$$rtexit$$00000000  c_p.l(rtexit.o)
+    0x00000158   0x00000158   0x00000000   Code   RO          295    .ARM.Collect$$rtexit$$00000002  c_p.l(rtexit2.o)
+    0x00000158   0x00000158   0x00000004   Code   RO          296    .ARM.Collect$$rtexit$$00000003  c_p.l(rtexit2.o)
+    0x0000015c   0x0000015c   0x00000006   Code   RO          297    .ARM.Collect$$rtexit$$00000004  c_p.l(rtexit2.o)
     0x00000162   0x00000162   0x00000002   PAD
-    0x00000164   0x00000164   0x00000040   Code   RO          122  * .text               startup_mkl25z4.o
-    0x000001a4   0x000001a4   0x0000015a   Code   RO          167    .text               c_p.l(aeabi_sdiv.o)
-    0x000002fe   0x000002fe   0x00000006   Code   RO          171    .text               c_p.l(heapauxi.o)
-    0x00000304   0x00000304   0x0000003e   Code   RO          197    .text               c_p.l(sys_stackheap_outer.o)
-    0x00000342   0x00000342   0x00000010   Code   RO          200    .text               c_p.l(exit.o)
+    0x00000164   0x00000164   0x00000040   Code   RO          145  * .text               startup_mkl25z4.o
+    0x000001a4   0x000001a4   0x0000015a   Code   RO          190    .text               c_p.l(aeabi_sdiv.o)
+    0x000002fe   0x000002fe   0x00000006   Code   RO          194    .text               c_p.l(heapauxi.o)
+    0x00000304   0x00000304   0x0000003e   Code   RO          220    .text               c_p.l(sys_stackheap_outer.o)
+    0x00000342   0x00000342   0x00000010   Code   RO          223    .text               c_p.l(exit.o)
     0x00000352   0x00000352   0x00000002   PAD
-    0x00000354   0x00000354   0x00000008   Code   RO          212    .text               c_p.l(libspace.o)
-    0x0000035c   0x0000035c   0x0000000c   Code   RO          269    .text               c_p.l(sys_exit.o)
-    0x00000368   0x00000368   0x00000002   Code   RO          288    .text               c_p.l(use_no_semi.o)
-    0x0000036a   0x0000036a   0x00000000   Code   RO          290    .text               c_p.l(indicate_semi.o)
+    0x00000354   0x00000354   0x00000008   Code   RO          235    .text               c_p.l(libspace.o)
+    0x0000035c   0x0000035c   0x0000000c   Code   RO          292    .text               c_p.l(sys_exit.o)
+    0x00000368   0x00000368   0x00000002   Code   RO          311    .text               c_p.l(use_no_semi.o)
+    0x0000036a   0x0000036a   0x00000000   Code   RO          313    .text               c_p.l(indicate_semi.o)
     0x0000036a   0x0000036a   0x00000002   PAD
-    0x0000036c   0x0000036c   0x00000068   Code   RO            4    i.HandleFrontLeds   myblinky.o
-    0x000003d4   0x000003d4   0x00000020   Code   RO            7    i.OffAllFrontLeds   myblinky.o
-    0x000003f4   0x000003f4   0x0000000c   Code   RO          131    i.SystemInit        system_mkl25z4.o
-    0x00000400   0x00000400   0x00000010   Code   RO          121    .ARM.__at_0x400     startup_mkl25z4.o
-    0x00000410   0x00000410   0x000000f4   Code   RO            5    i.InitGPIO          myblinky.o
-    0x00000504   0x00000504   0x00000068   Code   RO            6    i.InitSwitch        myblinky.o
-    0x0000056c   0x0000056c   0x0000002c   Code   RO            8    i.OffFrontLed       myblinky.o
-    0x00000598   0x00000598   0x00000020   Code   RO            9    i.OnAllFrontLeds    myblinky.o
-    0x000005b8   0x000005b8   0x0000002c   Code   RO           10    i.OnFrontLed        myblinky.o
-    0x000005e4   0x000005e4   0x00000030   Code   RO           11    i.PORTD_IRQHandler  myblinky.o
-    0x00000614   0x00000614   0x00000018   Code   RO           12    i.__NVIC_ClearPendingIRQ  myblinky.o
-    0x0000062c   0x0000062c   0x00000078   Code   RO           13    i.__NVIC_SetPriority  myblinky.o
-    0x000006a4   0x000006a4   0x00000014   Code   RO           14    i.delay             myblinky.o
-    0x000006b8   0x000006b8   0x00000010   Code   RO           15    i.main              myblinky.o
-    0x000006c8   0x000006c8   0x00000020   Data   RO          340    Region$$Table       anon$$obj.o
+    0x0000036c   0x0000036c   0x00000068   Code   RO            3    i.HandleFrontLeds   myblinky.o
+    0x000003d4   0x000003d4   0x00000020   Code   RO            8    i.OffAllFrontLeds   myblinky.o
+    0x000003f4   0x000003f4   0x0000000c   Code   RO          154    i.SystemInit        system_mkl25z4.o
+    0x00000400   0x00000400   0x00000010   Code   RO          144    .ARM.__at_0x400     startup_mkl25z4.o
+    0x00000410   0x00000410   0x000000b4   Code   RO            4    i.InitBackLedTimer  myblinky.o
+    0x000004c4   0x000004c4   0x000000f4   Code   RO            5    i.InitGPIO          myblinky.o
+    0x000005b8   0x000005b8   0x00000050   Code   RO            6    i.InitSwitch        myblinky.o
+    0x00000608   0x00000608   0x0000002c   Code   RO            9    i.OffFrontLed       myblinky.o
+    0x00000634   0x00000634   0x00000020   Code   RO           11    i.OnAllFrontLeds    myblinky.o
+    0x00000654   0x00000654   0x0000002c   Code   RO           12    i.OnFrontLed        myblinky.o
+    0x00000680   0x00000680   0x0000004c   Code   RO           13    i.PORTD_IRQHandler  myblinky.o
+    0x000006cc   0x000006cc   0x00000068   Code   RO           14    i.TPM0_IRQHandler   myblinky.o
+    0x00000734   0x00000734   0x00000018   Code   RO           15    i.__NVIC_ClearPendingIRQ  myblinky.o
+    0x0000074c   0x0000074c   0x00000020   Code   RO           16    i.__NVIC_EnableIRQ  myblinky.o
+    0x0000076c   0x0000076c   0x00000078   Code   RO           17    i.__NVIC_SetPriority  myblinky.o
+    0x000007e4   0x000007e4   0x00000014   Code   RO           18    i.delay             myblinky.o
+    0x000007f8   0x000007f8   0x00000014   Code   RO           19    i.main              myblinky.o
+    0x0000080c   0x0000080c   0x00000020   Data   RO          363    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x1ffff000, Load base: 0x000006e8, Size: 0x00000034, Max: 0xffffffff, ABSOLUTE)
-
-    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
-
-    0x1ffff000   0x000006e8   0x00000034   Data   RW           16    .data               myblinky.o
-
-
-    Execution Region ER_ZI (Exec base: 0x1ffff034, Load base: 0x0000071c, Size: 0x00000164, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x1ffff000, Load base: 0x0000082c, Size: 0x0000003c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x1ffff034        -       0x00000060   Zero   RW          213    .bss                c_p.l(libspace.o)
-    0x1ffff094   0x0000071c   0x00000004   PAD
-    0x1ffff098        -       0x00000000   Zero   RW          119    HEAP                startup_mkl25z4.o
-    0x1ffff098        -       0x00000100   Zero   RW          118    STACK               startup_mkl25z4.o
+    0x1ffff000   0x0000082c   0x0000003c   Data   RW           20    .data               myblinky.o
+
+
+    Execution Region ER_ZI (Exec base: 0x1ffff03c, Load base: 0x00000868, Size: 0x00000164, Max: 0xffffffff, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x1ffff03c        -       0x00000060   Zero   RW          236    .bss                c_p.l(libspace.o)
+    0x1ffff09c   0x00000868   0x00000004   PAD
+    0x1ffff0a0        -       0x00000000   Zero   RW          142    HEAP                startup_mkl25z4.o
+    0x1ffff0a0        -       0x00000100   Zero   RW          141    STACK               startup_mkl25z4.o
 
 
 ==============================================================================
@@ -589,12 +600,12 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       832        100          0         52          0     230480   myblinky.o
+      1156        150          0         60          0     231765   myblinky.o
         80         44        192          0        256        868   startup_mkl25z4.o
         12          4          0          0          0        437   system_mkl25z4.o
 
     ----------------------------------------------------------------------
-       924        148        224         52        256     231785   Object Totals
+      1248        198        224         60        256     233070   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          0          0          0          0          0          0   (incl. Padding)
 
@@ -644,15 +655,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1544        164        224         52        356     231753   Grand Totals
-      1544        164        224         52        356     231753   ELF Image Totals
-      1544        164        224         52          0          0   ROM Totals
+      1868        214        224         60        356     232906   Grand Totals
+      1868        214        224         60        356     232906   ELF Image Totals
+      1868        214        224         60          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 1768 (   1.73kB)
-    Total RW  Size (RW Data + ZI Data)               408 (   0.40kB)
-    Total ROM Size (Code + RO Data + RW Data)       1820 (   1.78kB)
+    Total RO  Size (Code + RO Data)                 2092 (   2.04kB)
+    Total RW  Size (RW Data + ZI Data)               416 (   0.41kB)
+    Total ROM Size (Code + RO Data + RW Data)       2152 (   2.10kB)
 
 ==============================================================================
 

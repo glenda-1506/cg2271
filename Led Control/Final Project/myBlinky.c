@@ -11,19 +11,19 @@
 #define F8 17  // PTC17
 #define F9 16  // PTC16
 #define F10 13 // PTC13
-#define L1 12  // PTC12
+#define B1 2   // PTC2
 
 int g_frontLeds[10] = {F1,F2,F3,F4,F5,F6,F7,F8,F9,F10};
 volatile int g_isMoving = 0;
-volatile int currentFrontLed = 0;
-volatile int ledState = 0; // 0 for off & 1 is for on
+volatile int g_currentFrontLed = 0;
+volatile int g_backLedCycle = 25; // amount of overflow for 1 second period
+volatile int g_overflowCounter = 0;
+volatile int g_backLedIsOn = 1;
 
 // Define all other constants
 #define MASK(x) (1 << (x))
 #define SW_POS 6 // PTD6
 #define MAX_DELAY 0x80000
-
-
 
 void InitGPIO(void) {
 	// Enable Clock to PORTD & PORTC
@@ -37,6 +37,7 @@ void InitGPIO(void) {
 		PORTD->PCR[g_frontLeds[i]] |= PORT_PCR_MUX(1);
 		PTD->PDDR |= MASK(g_frontLeds[i]);
 	}
+	
 	for (int i = 5; i < 10; i++){
 		PORTC->PCR[g_frontLeds[i]] &= ~PORT_PCR_MUX_MASK;
 		PORTC->PCR[g_frontLeds[i]] |= PORT_PCR_MUX(1);
@@ -71,6 +72,7 @@ void PORTD_IRQHandler(){
 
     // Update some variables / flag
     g_isMoving = !g_isMoving;
+		g_isMoving ? (g_backLedCycle = 50):(g_backLedCycle = 25);
 
     // Clear INT Flag
     PORTD->ISFR |= MASK(SW_POS);
@@ -83,6 +85,13 @@ static void delay(volatile uint32_t nof) {
   }
 }
 
+void OnAllBackLeds(){
+	PTC->PSOR |= MASK(B1);
+}
+
+void OffAllBackLeds(){
+	PTC->PCOR |= MASK(B1);
+}
 void OnFrontLed(int led, int index){
 	if (index < 5){
 		PTD->PSOR |= MASK(led); // All pins are Port D
@@ -113,41 +122,68 @@ void OffAllFrontLeds(){
 	}
 }
 
-void HandleFrontLed() {
-	if (g_isMoving) {
-		if (ledState == 0) {
-			OffAllFrontLeds();
-			OnFrontLed(g_frontLeds[currentFrontLed], currentFrontLed);
-      ledState = 1;
-		} else {
-			OffFrontLed(g_frontLeds[currentFrontLed], currentFrontLed);
-      ledState = 0;
-      currentFrontLed = (currentFrontLed + 1) % 10; // move to the next LED
-		}
-	} else {
-		OnAllFrontLeds();
-    currentFrontLed = 0; // reset to prep for interrupt
-    ledState = 0; // reset to prep for interrupt
-	}
-	delay(0.1 * MAX_DELAY);
-}
-
 void HandleFrontLeds(){
 	if (g_isMoving){
 		OffAllFrontLeds();
-		OnFrontLed(g_frontLeds[currentFrontLed], currentFrontLed);
+		OnFrontLed(g_frontLeds[g_currentFrontLed], g_currentFrontLed);
 		delay(MAX_DELAY*0.2);
-		OffFrontLed(g_frontLeds[currentFrontLed], currentFrontLed);
+		OffFrontLed(g_frontLeds[g_currentFrontLed], g_currentFrontLed);
 	} else {
 		OnAllFrontLeds();
-		currentFrontLed = -1;
+		g_currentFrontLed = -1;
 	}
-	currentFrontLed = (currentFrontLed + 1) % 10; // move to the next LED
+	g_currentFrontLed = (g_currentFrontLed + 1) % 10;
 }
 
-int main(){  //InitGPIO
+void InitBackLedTimer(){
+	// Configure Mode 4 for PWM pin Operation
+	PORTC->PCR[B1] &= ~PORT_PCR_MUX_MASK;
+	PORTC->PCR[B1] |= PORT_PCR_MUX(4);
+	
+	// Enable clock gating for Timer 0
+	SIM->SCGC6 |= SIM_SCGC6_TPM0_MASK;
+	
+	// Select Clock for TPM module
+	SIM->SOPT2 &= ~SIM_SOPT2_TPMSRC_MASK;
+	SIM->SOPT2 |= SIM_SOPT2_TPMSRC(1);
+	
+	// Select MOD value
+	TPM0->MOD = 3750;
+	TPM0_C1V = TPM0->MOD;
+	
+	// Select CMOD and Prescalars
+	TPM0 -> SC &= ~((TPM_SC_CMOD_MASK) | (TPM_SC_PS_MASK));
+  TPM0 -> SC |= (TPM_SC_CMOD(1) | TPM_SC_PS(7) | TPM_SC_TOIE_MASK); // CMOD = 01, Prescalar = 128, Enable the overflow interrupt
+  TPM0 -> SC &= ~(TPM_SC_CPWMS_MASK);
+	
+	// TPM0 CH1 is PTC2
+	TPM0_C1SC &= ~((TPM_CnSC_ELSB_MASK) | (TPM_CnSC_ELSA_MASK) | (TPM_CnSC_MSA_MASK) | (TPM_CnSC_MSB_MASK));
+	TPM0_C1SC |= (TPM_CnSC_ELSB(1) | TPM_CnSC_MSB(1));
+	
+	// Enable IRQ for TPM0
+	NVIC_SetPriority(TPM0_IRQn, 3);
+  NVIC_ClearPendingIRQ(TPM0_IRQn);
+  NVIC_EnableIRQ(TPM0_IRQn);
+}
+
+void TPM0_IRQHandler(){
+	TPM0->SC |= TPM_SC_TOF_MASK; // clear overflow flag
+	g_overflowCounter++;
+	if (g_overflowCounter >= g_backLedCycle){
+		if (g_backLedIsOn){
+			TPM0_C1V = 0;
+		} else {
+			TPM0_C1V = 3750;
+		}
+		g_overflowCounter = 0;
+		g_backLedIsOn = !g_backLedIsOn;
+	}
+}
+
+int main(){
   InitGPIO();
   InitSwitch();
+	InitBackLedTimer();
 	while(1){
 		HandleFrontLeds();
 	}
