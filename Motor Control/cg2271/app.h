@@ -60,8 +60,8 @@ struct {
   uint8_t right; // =1 if button pressed, else =0
   int8_t forwardSpeed; // from 0 to 100
   int8_t turnSpeed; // from 0 to 100
-  uint8_t forwardGear; // from 0 to 3
-  uint8_t turnGear; // from 0 to 3
+  uint8_t forwardGear; // from 0 to 3 inclusive
+  uint8_t turnGear; // from 0 to 3 inclusive
   uint8_t stop; // =1 if button pressed, else =0
   uint8_t complete; // =1 if button pressed, else =0
 
@@ -76,6 +76,8 @@ struct {
 /////////////////////////////////////////////
 uint8_t g_gearControl[4] = {25,50,75,100};
 bool isMoving = false;
+int currentForwardGear = -1;
+int currentTurnGear = -1;
 
 void HandleControl(){
   if (RemoteXY.forward == 1){
@@ -106,14 +108,16 @@ void HandleControl(){
   }
   
   for (int i = 0; i < 4; i++){
-    if (RemoteXY.forwardGear == i){
+    if (currentForwardGear != i && RemoteXY.forwardGear == i){
       RemoteXY.forwardSpeed = g_gearControl[i];
+      currentForwardGear = i;
     }
   }
 
   for (int i = 0; i < 4; i++){
-    if (RemoteXY.turnGear == i){
+    if (currentTurnGear != i && RemoteXY.turnGear == i){
       RemoteXY.turnSpeed = g_gearControl[i];
+      currentTurnGear = i;
     }
   }
 }
