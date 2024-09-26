@@ -167,7 +167,7 @@ void InitBackLedTimer(){
 }
 
 void TPM0_IRQHandler(){
-	TPM0->SC |= TPM_SC_TOF_MASK; // clear overflow flag
+	NVIC_ClearPendingIRQ(TPM0_IRQn); // clear pending interrupts
 	g_overflowCounter++;
 	if (g_overflowCounter >= g_backLedCycle){
 		if (g_backLedIsOn){
@@ -178,6 +178,7 @@ void TPM0_IRQHandler(){
 		g_overflowCounter = 0;
 		g_backLedIsOn = !g_backLedIsOn;
 	}
+	TPM0->SC |= TPM_SC_TOF_MASK; // clear overflow flag
 }
 
 int main(){

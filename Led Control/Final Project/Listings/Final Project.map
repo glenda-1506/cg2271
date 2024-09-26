@@ -24,6 +24,7 @@ Section Cross References
     myblinky.o(i.OnAllFrontLeds) refers to myblinky.o(.data) for g_frontLeds
     myblinky.o(i.PORTD_IRQHandler) refers to myblinky.o(i.__NVIC_ClearPendingIRQ) for __NVIC_ClearPendingIRQ
     myblinky.o(i.PORTD_IRQHandler) refers to myblinky.o(.data) for g_isMoving
+    myblinky.o(i.TPM0_IRQHandler) refers to myblinky.o(i.__NVIC_ClearPendingIRQ) for __NVIC_ClearPendingIRQ
     myblinky.o(i.TPM0_IRQHandler) refers to myblinky.o(.data) for g_overflowCounter
     myblinky.o(i.main) refers to myblinky.o(i.InitGPIO) for InitGPIO
     myblinky.o(i.main) refers to myblinky.o(i.InitSwitch) for InitSwitch
@@ -304,15 +305,15 @@ Image Symbol Table
     i.OnFrontLed                             0x00000654   Section        0  myblinky.o(i.OnFrontLed)
     i.PORTD_IRQHandler                       0x00000680   Section        0  myblinky.o(i.PORTD_IRQHandler)
     i.TPM0_IRQHandler                        0x000006cc   Section        0  myblinky.o(i.TPM0_IRQHandler)
-    i.__NVIC_ClearPendingIRQ                 0x00000734   Section        0  myblinky.o(i.__NVIC_ClearPendingIRQ)
-    __NVIC_ClearPendingIRQ                   0x00000735   Thumb Code    18  myblinky.o(i.__NVIC_ClearPendingIRQ)
-    i.__NVIC_EnableIRQ                       0x0000074c   Section        0  myblinky.o(i.__NVIC_EnableIRQ)
-    __NVIC_EnableIRQ                         0x0000074d   Thumb Code    26  myblinky.o(i.__NVIC_EnableIRQ)
-    i.__NVIC_SetPriority                     0x0000076c   Section        0  myblinky.o(i.__NVIC_SetPriority)
-    __NVIC_SetPriority                       0x0000076d   Thumb Code   110  myblinky.o(i.__NVIC_SetPriority)
-    i.delay                                  0x000007e4   Section        0  myblinky.o(i.delay)
-    delay                                    0x000007e5   Thumb Code    20  myblinky.o(i.delay)
-    i.main                                   0x000007f8   Section        0  myblinky.o(i.main)
+    i.__NVIC_ClearPendingIRQ                 0x0000073c   Section        0  myblinky.o(i.__NVIC_ClearPendingIRQ)
+    __NVIC_ClearPendingIRQ                   0x0000073d   Thumb Code    18  myblinky.o(i.__NVIC_ClearPendingIRQ)
+    i.__NVIC_EnableIRQ                       0x00000754   Section        0  myblinky.o(i.__NVIC_EnableIRQ)
+    __NVIC_EnableIRQ                         0x00000755   Thumb Code    26  myblinky.o(i.__NVIC_EnableIRQ)
+    i.__NVIC_SetPriority                     0x00000774   Section        0  myblinky.o(i.__NVIC_SetPriority)
+    __NVIC_SetPriority                       0x00000775   Thumb Code   110  myblinky.o(i.__NVIC_SetPriority)
+    i.delay                                  0x000007ec   Section        0  myblinky.o(i.delay)
+    delay                                    0x000007ed   Thumb Code    20  myblinky.o(i.delay)
+    i.main                                   0x00000800   Section        0  myblinky.o(i.main)
     .data                                    0x1ffff000   Section       60  myblinky.o(.data)
     .bss                                     0x1ffff03c   Section       96  libspace.o(.bss)
     HEAP                                     0x1ffff0a0   Section        0  startup_mkl25z4.o(HEAP)
@@ -470,10 +471,10 @@ Image Symbol Table
     OnAllFrontLeds                           0x00000635   Thumb Code    26  myblinky.o(i.OnAllFrontLeds)
     OnFrontLed                               0x00000655   Thumb Code    40  myblinky.o(i.OnFrontLed)
     PORTD_IRQHandler                         0x00000681   Thumb Code    62  myblinky.o(i.PORTD_IRQHandler)
-    TPM0_IRQHandler                          0x000006cd   Thumb Code    82  myblinky.o(i.TPM0_IRQHandler)
-    main                                     0x000007f9   Thumb Code    20  myblinky.o(i.main)
-    Region$$Table$$Base                      0x0000080c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0000082c   Number         0  anon$$obj.o(Region$$Table)
+    TPM0_IRQHandler                          0x000006cd   Thumb Code    90  myblinky.o(i.TPM0_IRQHandler)
+    main                                     0x00000801   Thumb Code    20  myblinky.o(i.main)
+    Region$$Table$$Base                      0x00000814   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00000834   Number         0  anon$$obj.o(Region$$Table)
     g_frontLeds                              0x1ffff000   Data          40  myblinky.o(.data)
     g_isMoving                               0x1ffff028   Data           4  myblinky.o(.data)
     g_currentFrontLed                        0x1ffff02c   Data           4  myblinky.o(.data)
@@ -491,9 +492,9 @@ Memory Map of the image
 
   Image Entry point : 0x00000165
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00000868, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000870, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x0000082c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00000834, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -567,28 +568,28 @@ Memory Map of the image
     0x00000634   0x00000634   0x00000020   Code   RO           11    i.OnAllFrontLeds    myblinky.o
     0x00000654   0x00000654   0x0000002c   Code   RO           12    i.OnFrontLed        myblinky.o
     0x00000680   0x00000680   0x0000004c   Code   RO           13    i.PORTD_IRQHandler  myblinky.o
-    0x000006cc   0x000006cc   0x00000068   Code   RO           14    i.TPM0_IRQHandler   myblinky.o
-    0x00000734   0x00000734   0x00000018   Code   RO           15    i.__NVIC_ClearPendingIRQ  myblinky.o
-    0x0000074c   0x0000074c   0x00000020   Code   RO           16    i.__NVIC_EnableIRQ  myblinky.o
-    0x0000076c   0x0000076c   0x00000078   Code   RO           17    i.__NVIC_SetPriority  myblinky.o
-    0x000007e4   0x000007e4   0x00000014   Code   RO           18    i.delay             myblinky.o
-    0x000007f8   0x000007f8   0x00000014   Code   RO           19    i.main              myblinky.o
-    0x0000080c   0x0000080c   0x00000020   Data   RO          363    Region$$Table       anon$$obj.o
+    0x000006cc   0x000006cc   0x00000070   Code   RO           14    i.TPM0_IRQHandler   myblinky.o
+    0x0000073c   0x0000073c   0x00000018   Code   RO           15    i.__NVIC_ClearPendingIRQ  myblinky.o
+    0x00000754   0x00000754   0x00000020   Code   RO           16    i.__NVIC_EnableIRQ  myblinky.o
+    0x00000774   0x00000774   0x00000078   Code   RO           17    i.__NVIC_SetPriority  myblinky.o
+    0x000007ec   0x000007ec   0x00000014   Code   RO           18    i.delay             myblinky.o
+    0x00000800   0x00000800   0x00000014   Code   RO           19    i.main              myblinky.o
+    0x00000814   0x00000814   0x00000020   Data   RO          363    Region$$Table       anon$$obj.o
 
 
-    Execution Region ER_RW (Exec base: 0x1ffff000, Load base: 0x0000082c, Size: 0x0000003c, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RW (Exec base: 0x1ffff000, Load base: 0x00000834, Size: 0x0000003c, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x1ffff000   0x0000082c   0x0000003c   Data   RW           20    .data               myblinky.o
+    0x1ffff000   0x00000834   0x0000003c   Data   RW           20    .data               myblinky.o
 
 
-    Execution Region ER_ZI (Exec base: 0x1ffff03c, Load base: 0x00000868, Size: 0x00000164, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_ZI (Exec base: 0x1ffff03c, Load base: 0x00000870, Size: 0x00000164, Max: 0xffffffff, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x1ffff03c        -       0x00000060   Zero   RW          236    .bss                c_p.l(libspace.o)
-    0x1ffff09c   0x00000868   0x00000004   PAD
+    0x1ffff09c   0x00000870   0x00000004   PAD
     0x1ffff0a0        -       0x00000000   Zero   RW          142    HEAP                startup_mkl25z4.o
     0x1ffff0a0        -       0x00000100   Zero   RW          141    STACK               startup_mkl25z4.o
 
@@ -600,12 +601,12 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-      1156        150          0         60          0     232233   myblinky.o
+      1164        150          0         60          0     232261   myblinky.o
         80         44        192          0        256        868   startup_mkl25z4.o
         12          4          0          0          0        437   system_mkl25z4.o
 
     ----------------------------------------------------------------------
-      1248        198        224         60        256     233538   Object Totals
+      1256        198        224         60        256     233566   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          0          0          0          0          0          0   (incl. Padding)
 
@@ -655,15 +656,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      1868        214        224         60        356     233374   Grand Totals
-      1868        214        224         60        356     233374   ELF Image Totals
-      1868        214        224         60          0          0   ROM Totals
+      1876        214        224         60        356     233402   Grand Totals
+      1876        214        224         60        356     233402   ELF Image Totals
+      1876        214        224         60          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 2092 (   2.04kB)
+    Total RO  Size (Code + RO Data)                 2100 (   2.05kB)
     Total RW  Size (RW Data + ZI Data)               416 (   0.41kB)
-    Total ROM Size (Code + RO Data + RW Data)       2152 (   2.10kB)
+    Total ROM Size (Code + RO Data + RW Data)       2160 (   2.11kB)
 
 ==============================================================================
 
