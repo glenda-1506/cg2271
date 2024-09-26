@@ -1,0 +1,2 @@
+Extract it and put in the Library directory of sketchbook folder. 
+See location of your sketchbook folder at File > Preferences > Sketchbook location.
