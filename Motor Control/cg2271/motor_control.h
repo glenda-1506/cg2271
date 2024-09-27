@@ -1,60 +1,84 @@
-// MOTOR right back
-#define IN1 32
-#define IN2 33
+#include <app.h>
+// Define all motor pins below (A is red wire, B is black wire)
+#define LEFT_FRONT_A 32  // IN1
+#define LEFT_FRONT_B 33  // IN2
+#define LEFT_BACK_A 25   // IN3
+#define LEFT_BACK_B 26   // IN4
+#define RIGHT_FRONT_A 27 // IN5
+#define RIGHT_FRONT_B 14 // IN6
+#define RIGHT_BACK_A 12  // IN7
+#define RIGHT_BACK_B 13  // IN8
+#define VIN 34
 
-// MOTOT right front
-#define IN3 25
-#define IN4 26
+//uint32_t g_vIn = analogRead(VIN);
+uint32_t g_vIn = 255;
 
-// MOTOR left back
-#define IN5 27
-#define IN6 14
+// Define Motor array where:
+// first 4 index is A, last 4 is B
+// Even indexes are left motors, Odd indexes are right motors
+uint8_t MOTORS[8] = {
+  LEFT_FRONT_A,
+  RIGHT_FRONT_A,
+  LEFT_BACK_A,
+  RIGHT_BACK_A,
+  LEFT_FRONT_B,
+  RIGHT_FRONT_B,
+  LEFT_BACK_B,
+  RIGHT_BACK_B
+};
 
-// MOTOT left front
-#define IN7 12
-#define IN8 13
-
-// redo this part later
-void moveMotorsLeft() {
-  // Insert code to control motors to move left
-  Serial.println("Motor moving left");
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
+// Set motor pins here
+void SetMotorPins(){
+  for (uint8_t i=0; i<8;i++){
+    ledcAttachChannel(MOTORS[i], 12000, 8, i);
+  }
 }
 
 // redo this part later
-void moveMotorsRight() {
-  // Insert code to control motors to move left
-  Serial.println("Motor moving right");
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
-}
-void moveMotorsFront() {
-  // Insert code to control motors to move left
-  Serial.println("Motor moving front");
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, HIGH);
-  digitalWrite(IN4, LOW);
-}
-void moveMotorsBack() {
-  // Insert code to control motors to move left
-  Serial.println("Motor moving back");
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
+void MoveForward() {
+  if (RemoteXY.forward == 1){
+    Serial.println("<Robot moving forward>");
+    for (uint8_t i=0;i<4;i++){
+      uint32_t val = g_vIn;
+      if (i % 2 == 0){
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
+      } else {
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
+      }
+      ledcWrite(i, val);
+      
+      // For Debugging
+      Serial.println("Motor[" + String(i) + "] value is: " + String(val));
+    }  
+  }
 }
 
-void moveMotorsStop() {
-  // Insert code to control motors to move left
-  Serial.println("Motor stopped");
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, LOW);
+void MoveBackward() {
+  if (RemoteXY.backward == 1){
+    Serial.println("<Robot moving backward>");
+    for (uint8_t i=4;i<8;i++){
+      uint32_t val = g_vIn;
+      if (i % 2 == 0){
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
+      } else {
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
+      }
+      ledcWrite(i, val);
+
+      // For Debugging
+      Serial.println("Motor[" + String(i) + "] value is: " + String(val));
+    }  
+  }
+}
+
+void Stop() {
+  Serial.println("<Robot has stopped moving>");
+  for (uint8_t i=0;i<8;i++){
+    digitalWrite(MOTORS[i], LOW);
+  }
+}
+
+void HandleMovement(){
+  MoveForward();
+  MoveBackward();
 }

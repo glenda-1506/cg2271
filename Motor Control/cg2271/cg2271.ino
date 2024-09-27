@@ -1,5 +1,3 @@
-#include <app.h>
-#include <env.h>
 #include <motor_control.h>
 
 const char* ssid     = NETWORK_NAME;
@@ -22,17 +20,11 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  pinMode(IN5, OUTPUT);
-  pinMode(IN6, OUTPUT);
-  pinMode(IN7, OUTPUT);
-  pinMode(IN8, OUTPUT);
+  SetMotorPins();
 }
 
 void loop() {
   RemoteXY_Handler ();
   HandleControl();
+  HandleMovement();
 }
