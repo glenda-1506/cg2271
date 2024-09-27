@@ -49,6 +49,8 @@ void MoveForward() {
       
       // For Debugging
       Serial.println("Motor[" + String(i) + "] value is: " + String(val));
+      RemoteXY_delay(125);
+      // Delete between these 2 comments
     }  
   }
 }
@@ -67,6 +69,8 @@ void MoveBackward() {
 
       // For Debugging
       Serial.println("Motor[" + String(i) + "] value is: " + String(val));
+      RemoteXY_delay(125);
+      // Delete between these 2 comments
     }  
   }
 }
