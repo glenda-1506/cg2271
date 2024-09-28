@@ -35,7 +35,7 @@ void SetMotorPins(){
 }
 
 // redo this part later
-void MoveForward() {
+bool MoveForward() {
   if (RemoteXY.forward == 1){
     Serial.println("<Robot moving forward>");
     for (uint8_t i=0;i<4;i++){
@@ -51,11 +51,13 @@ void MoveForward() {
       Serial.println("Motor[" + String(i) + "] value is: " + String(val));
       RemoteXY_delay(125);
       // Delete between these 2 comments
-    }  
+    }
+    return true;  
   }
+  return false;
 }
 
-void MoveBackward() {
+bool MoveBackward() {
   if (RemoteXY.backward == 1){
     Serial.println("<Robot moving backward>");
     for (uint8_t i=4;i<8;i++){
@@ -72,17 +74,19 @@ void MoveBackward() {
       RemoteXY_delay(125);
       // Delete between these 2 comments
     }  
+    return true;
   }
+  return false;
 }
 
-void Stop() {
-  Serial.println("<Robot has stopped moving>");
+bool Stop() {
+  Serial.println("<Robot is not moving>");
   for (uint8_t i=0;i<8;i++){
-    digitalWrite(MOTORS[i], LOW);
+    ledcWrite(i, 0);
   }
+  return true;
 }
 
-void HandleMovement(){
-  MoveForward();
-  MoveBackward();
+bool HandleMovement(){
+  return MoveForward() || MoveBackward() || Stop();
 }
