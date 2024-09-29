@@ -45,7 +45,7 @@ bool MoveForward() {
       } else {
         val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
       }
-      ledcWrite(i, val);
+      ledcWrite(MOTORS[i], val);
       
       // For Debugging
       Serial.println("Motor[" + String(i) + "] value is: " + String(val));
@@ -67,7 +67,7 @@ bool MoveBackward() {
       } else {
         val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
       }
-      ledcWrite(i, val);
+      ledcWrite(MOTORS[i], val);
 
       // For Debugging
       Serial.println("Motor[" + String(i) + "] value is: " + String(val));
@@ -82,7 +82,7 @@ bool MoveBackward() {
 bool Stop() {
   Serial.println("<Robot is not moving>");
   for (uint8_t i=0;i<8;i++){
-    ledcWrite(i, 0);
+    ledcWrite(MOTORS[i], 0);
   }
   return true;
 }
