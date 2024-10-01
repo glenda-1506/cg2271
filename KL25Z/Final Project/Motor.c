@@ -5,7 +5,7 @@ void move_left_forward(uint8_t speed);
 void move_left_reverse(uint8_t speed);
 void move_right_forward(uint8_t speed);
 void move_right_reverse(uint8_t speed);
-/*
+
 void InitMotor() {
   SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;
 	
@@ -50,4 +50,4 @@ void InitMotor() {
   TPM1->MOD = MOTOR_PERIOD_TICKS;
   TPM2->MOD = MOTOR_PERIOD_TICKS;
 }
-*/
+
