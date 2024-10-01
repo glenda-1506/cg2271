@@ -1,4 +1,5 @@
-#include "LED.c"                    // Device header
+#include "LED.c"   
+#include "Motor.c"
 
 int main(){
   InitGPIO();
