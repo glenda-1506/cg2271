@@ -1,9 +1,9 @@
-#include "LED.c"                    // Device header
+#include "Init.c"  
 
 int main(){
-  InitGPIO();
+  InitLed();
   InitSwitch();
-	InitBackLedTimer();
+	InitTimers();
 	while(1){
 		HandleFrontLeds();
 	}

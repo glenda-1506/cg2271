@@ -1,17 +1,5 @@
 #include "MKL25Z4.h"
-
-// Define all Led Pins <Any led pins from F6 onwards is port C>
-#define F1 1   // PTD1
-#define F2 3   // PTD3
-#define F3 2   // PTD2
-#define F4 0   // PTD0
-#define F5 5   // PTD5
-#define F6 9   // PTC9
-#define F7 8   // PTC8
-#define F8 17  // PTC17
-#define F9 16  // PTC16
-#define F10 13 // PTC13
-#define B1 2   // PTC2
+#include "Constants.h"
 
 int g_frontLeds[10] = {F1,F2,F3,F4,F5,F6,F7,F8,F9,F10};
 volatile int g_isMoving = 0;
@@ -20,12 +8,7 @@ volatile int g_backLedCycle = 25; // amount of overflow for 1 second period
 volatile int g_overflowCounter = 0;
 volatile int g_backLedIsOn = 1;
 
-// Define all other constants
-#define MASK(x) (1 << (x))
-#define SW_POS 6 // PTD6
-#define MAX_DELAY 0x80000
-
-void InitGPIO(void) {
+void InitLed(void) {
 	// Enable Clock to PORTD & PORTC
   SIM->SCGC5 |= (SIM_SCGC5_PORTD_MASK);
 	SIM->SCGC5 |= (SIM_SCGC5_PORTC_MASK);
