@@ -101,7 +101,7 @@ void HandleControl(){
     Serial.println("Robot is not moving");
     RemoteXY_delay(100); 
     RemoteXY.stop = 0; // this line is needed!
-  }
+  } 
 
   if (RemoteXY.complete == 1){
     Serial.println("Race is complete");

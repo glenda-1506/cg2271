@@ -24,7 +24,7 @@ void setup() {
 }
 
 void loop() {
-  RemoteXY_Handler ();
-  HandleControl();
+  RemoteXY_Handler (); // this needs to be a timer interrupe
+  HandleControl(); // can merge with HandleMovement & the respective buttons can be grouped into interrupts
   HandleMovement();
 }

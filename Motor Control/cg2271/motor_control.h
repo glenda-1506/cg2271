@@ -41,9 +41,11 @@ bool MoveForward() {
     for (uint8_t i=0;i<4;i++){
       uint32_t val = g_vIn;
       if (i % 2 == 0){
-        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) 
+            * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
       } else {
-        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) 
+            * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
       }
       ledcWrite(MOTORS[i], val);
       
@@ -63,9 +65,11 @@ bool MoveBackward() {
     for (uint8_t i=4;i<8;i++){
       uint32_t val = g_vIn;
       if (i % 2 == 0){
-        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) 
+            * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.left));
       } else {
-        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
+        val = (uint32_t)(val * ((float)RemoteXY.forwardSpeed / 100) 
+            * (1 - ((float)(RemoteXY.turnSpeed) / 100) * RemoteXY.right));
       }
       ledcWrite(MOTORS[i], val);
 
