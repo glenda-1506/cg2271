@@ -383,11 +383,6 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Motor.c</FilePath>
-            </File>
-            <File>
               <FileName>myBlinky.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\myBlinky.c</FilePath>
