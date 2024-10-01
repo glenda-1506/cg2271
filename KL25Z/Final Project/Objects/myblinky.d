@@ -12,3 +12,6 @@
 .\objects\myblinky.o: Serial.c
 .\objects\myblinky.o: C:\Users\sithu\AppData\Local\Arm\Packs\Keil\Kinetis_KLxx_DFP\1.15.1\Device\Include\MKL25Z4.h
 .\objects\myblinky.o: Constants.h
+.\objects\myblinky.o: Motor.c
+.\objects\myblinky.o: C:\Users\sithu\AppData\Local\Arm\Packs\Keil\Kinetis_KLxx_DFP\1.15.1\Device\Include\MKL25Z4.h
+.\objects\myblinky.o: Constants.h

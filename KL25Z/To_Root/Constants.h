@@ -19,4 +19,12 @@
 #define SW_POS 6 // PTD6
 #define MAX_DELAY 0x80000
 
+// Define Motor Pins
+#define MOTOR_FRONT_LEFT 	0 
+#define MOTOR_FRONT_RIGHT   1 
+#define MOTOR_BACK_LEFT 	2 
+#define MOTOR_BACK_RIGHT 	3
+#define TIMER_PRESCALER 8
+#define MOTOR_PERIOD_TICKS 1
+
 
