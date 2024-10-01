@@ -5,5 +5,4 @@
 void InitTimers(){
 	InitBackLedTimer();
 	InitSerial(60096);
-	//InitMotor();
 }
