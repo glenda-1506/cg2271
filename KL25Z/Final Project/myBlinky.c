@@ -5,7 +5,8 @@ int main(){
   InitSwitch();
 	InitTimers();
 	InitMotor();
+	initPWM();
 	while(1){
-		HandleFrontLeds();
+		playSong();
 	}
 }
