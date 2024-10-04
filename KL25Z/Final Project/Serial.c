@@ -1,11 +1,14 @@
 #include "MKL25Z4.h"  
 #include "Constants.h"
 
+volatile uint8_t serialData = 0; // Ensure it can be used safely across threads and ISR
+
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	
   if (UART2->S1 & UART_S1_RDRF_MASK) {
-    uint32_t serialData = UART2->D;
+    serialData = UART2->D;
+    osSemaphoreRelease(flag); 
   }
 }
 
