@@ -1,4 +1,3 @@
-#include "MKL25Z4.h"  
 #include "Constants.h"
 
 void UART2_IRQHandler(void) {
