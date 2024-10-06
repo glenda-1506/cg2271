@@ -7,6 +7,8 @@ int main(){
   InitLed();
   InitSwitch();
 	InitBuzzer();
+	InitSerial(9600);
+	InitMotor();
 	while(1){
 		playSong();
 	}

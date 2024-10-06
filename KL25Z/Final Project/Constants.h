@@ -4,7 +4,7 @@
 #include "MKL25Z4.h"    
 
 // Define Serial Ports
-#define SERIAL_RX 23
+#define SERIAL_RX 23 // PTE23
 
 // Define all Led Pins <Any led pins from F6 onwards is port C>
 #define F1 7   // PTC7
@@ -20,12 +20,12 @@
 #define B1 3   // PTB3
 
 // Define Motor Constants
-#define MOTOR_FRONT_LEFT 	0 
-#define MOTOR_FRONT_RIGHT   1 
-#define MOTOR_BACK_LEFT 	2 
-#define MOTOR_BACK_RIGHT 	3
-#define TIMER_PRESCALER 8
-#define MOTOR_PERIOD_TICKS 1
+#define MOTOR_LEFT_RED     1 //PTC1
+#define MOTOR_RIGHT_RED    2 //PTC2
+#define MOTOR_LEFT_BLACK   8 //PTC8
+#define MOTOR_RIGHT_BLACK  9 //PTC9
+#define TIMER_PRESCALER 7
+#define MOTOR_MOD_VALUE 1000 // assuming a 1kHz PWM Frequency
 
 // Define Buzzer Constants
 #define PTB0_Pin 0 

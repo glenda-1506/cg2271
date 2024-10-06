@@ -12,6 +12,7 @@
 
 //uint32_t g_vIn = analogRead(VIN);
 uint32_t g_vIn = 255;
+uint8_t g_gearControl[4] = {25, 50, 75, 100};
 
 // Define Motor array where:
 // first 4 index is A, last 4 is B

@@ -1,12 +1,13 @@
-#include <motor_control.h>
+#include <app.h>
 
 const char* ssid     = NETWORK_NAME;
 const char* password = NETWORK_PASSWORD;
 
 void setup() {
   Serial.begin(9600);
+  Serial2.begin(9600,SERIAL_8N1,16,17);
   WiFi.begin(ssid, password);
-  RemoteXY_Init (); 
+  RemoteXY_Init(); 
 
   // Wait for connection
   while (WiFi.status() != WL_CONNECTED) {
@@ -19,12 +20,9 @@ void setup() {
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  
-  SetMotorPins();
 }
 
 void loop() {
-  RemoteXY_Handler (); // this needs to be a timer interrupe
-  HandleControl(); // can merge with HandleMovement & the respective buttons can be grouped into interrupts
-  HandleMovement();
+  RemoteXY_Handler();
+  HandleControl(); 
 }

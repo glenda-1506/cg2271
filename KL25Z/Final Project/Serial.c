@@ -1,11 +1,18 @@
 #include "Constants.h"
 
+volatile uint8_t serialData = 0; 
+
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	
   if (UART2->S1 & UART_S1_RDRF_MASK) {
-    uint32_t serialData = UART2->D;
+    serialData = UART2->D;
   }
+}
+
+void UART_Receive_Poll() {
+	while(!(UART2->S1 & UART_S1_RDRF_MASK));
+	serialData = UART2->D;
 }
 
 void InitSerial(uint32_t baud_rate) {
@@ -28,7 +35,7 @@ void InitSerial(uint32_t baud_rate) {
   
   UART2->C2 |= UART_C2_RE_MASK;
 
-  NVIC_SetPriority(UART2_IRQn, 128);
+  NVIC_SetPriority(UART2_IRQn, 2);
   NVIC_ClearPendingIRQ(UART2_IRQn);
   NVIC_EnableIRQ(UART2_IRQn);
 	

@@ -1,4 +1,3 @@
-
 /*
    -- ESP Motor Control --
    
@@ -25,11 +24,9 @@
 
 // RemoteXY select connection mode and include library 
 #define REMOTEXY_MODE__WIFI
-
 #include <WiFi.h>
 #include <env.h>
 #include <RemoteXY.h>
-
 // RemoteXY connection settings 
 #define REMOTEXY_WIFI_SSID NETWORK_NAME
 #define REMOTEXY_WIFI_PASSWORD NETWORK_PASSWORD
@@ -75,51 +72,33 @@ struct {
 /////////////////////////////////////////////
 //           END RemoteXY include          //
 /////////////////////////////////////////////
-uint8_t g_gearControl[4] = {25,50,75,100};
-bool isMoving = false;
-int currentForwardGear = -1;
-int currentTurnGear = -1;
+#define MASK(i) (1<<i)
+int prevData = 0;
+bool isComplete = false;
 
 void HandleControl(){
-  if (RemoteXY.forward == 1){
-    Serial.println("Robot moving forward");
-    isMoving = true;
-  }
-
-  if (RemoteXY.backward == 1){
-    Serial.println("Robot moving backward");
-    isMoving = true;
-  }
-
-  if (isMoving && RemoteXY.forward == 0 && RemoteXY.backward == 0){
-    RemoteXY.stop = 1;
-    isMoving = false;
-  }
-
-  if (RemoteXY.stop == 1){
-    // Do something here to signal that robot has stopped (an interrupt to KL25Z to trigger LEDs)
-    Serial.println("Robot is not moving");
-    RemoteXY_delay(100); 
-    RemoteXY.stop = 0; // this line is needed!
-  } 
-
-  if (RemoteXY.complete == 1){
-    Serial.println("Race is complete");
-    RemoteXY_delay(100); 
-  }
-  
-  for (int i = 0; i < 4; i++){
-    if (currentForwardGear != i && RemoteXY.forwardGear == i){
-      RemoteXY.forwardSpeed = g_gearControl[i];
-      currentForwardGear = i;
+  uint8_t currentData = 0;
+  if (RemoteXY.complete){
+    for (int i=0;i<4;i++){
+      currentData |= MASK(i);
+    }   
+  } else if (RemoteXY.stop) {
+    for (int i=0;i<4;i++){
+      currentData &= ~MASK(i);
     }
+  } else {
+    if (RemoteXY.forward) currentData |= MASK(0);
+    if (RemoteXY.backward) currentData |= MASK(1);
+    if (RemoteXY.left) currentData |= MASK(2);
+    if (RemoteXY.right) currentData |= MASK(3);
   }
-
-  for (int i = 0; i < 4; i++){
-    if (currentTurnGear != i && RemoteXY.turnGear == i){
-      RemoteXY.turnSpeed = g_gearControl[i];
-      currentTurnGear = i;
-    }
+  currentData |= (RemoteXY.forwardGear << 4); 
+  currentData |= (RemoteXY.turnGear << 6); 
+  if (currentData != prevData){
+    Serial2.write(currentData);
+    Serial.print("Control Byte: ");
+    Serial.println(currentData, BIN);
+    prevData = currentData;
   }
 }
 /* DO NOT DELETE THE CODE BELOW
