@@ -19,7 +19,7 @@ typedef struct {
 	uint8_t complete;
 } RemoteXY;
 
-RemoteXY g_controls;
+volatile RemoteXY g_controls;
 
 Motor motor[4] = {
 	{MOTOR_LEFT_RED, &TPM0_C0SC, &TPM0_C0V},
