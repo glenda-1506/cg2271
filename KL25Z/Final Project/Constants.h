@@ -25,7 +25,8 @@
 #define MOTOR_LEFT_BLACK   8 //PTC8
 #define MOTOR_RIGHT_BLACK  9 //PTC9
 #define TIMER_PRESCALER 7
-#define MOTOR_MOD_VALUE 1000 // assuming a 1kHz PWM Frequency
+#define MOTOR_MOD_VALUE 1000 // assuming a 1kHz PWM Frequency (375)
+#define MAX_MOTOR_SPEED 100 // range 0 - 100
 
 // Define Buzzer Constants
 #define PTB0_Pin 0 

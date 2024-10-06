@@ -1,12 +1,14 @@
 #include "Constants.h"
 
 volatile uint8_t serialData = 0; 
+volatile uint8_t serialReady = 0;
 
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	
   if (UART2->S1 & UART_S1_RDRF_MASK) {
     serialData = UART2->D;
+		serialReady = 1;
   }
 }
 

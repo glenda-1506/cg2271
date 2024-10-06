@@ -10,6 +10,7 @@ int main(){
 	InitSerial(9600);
 	InitMotor();
 	while(1){
-		playSong();
+		//playSong();
+		HandleMovement();
 	}
 }
