@@ -1,6 +1,12 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// RTOS Stuff 
+#include "RTE_Components.h"
+#include  CMSIS_device_header
+#include "cmsis_os2.h"
+
+
 #include "MKL25Z4.h"    
 
 // Define Serial Ports
@@ -24,9 +30,9 @@
 #define MOTOR_RIGHT_RED    2 //PTC2
 #define MOTOR_LEFT_BLACK   8 //PTC8
 #define MOTOR_RIGHT_BLACK  9 //PTC9
-#define TIMER_PRESCALER 7
-#define MOTOR_MOD_VALUE 1000 // assuming a 1kHz PWM Frequency (375)
-#define MAX_MOTOR_SPEED 100 // range 0 - 100
+#define TIMER_PRESCALER 5
+#define MOTOR_MOD_VALUE 30000 // assuming a 50kHz PWM Frequency
+#define MAX_MOTOR_SPEED 80 // range 0 - 100
 
 // Define Buzzer Constants
 #define PTB0_Pin 0 

@@ -2,13 +2,15 @@
 
 volatile uint8_t serialData = 0; 
 volatile uint8_t serialReady = 0;
+osSemaphoreId_t serialFlag;
 
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	
   if (UART2->S1 & UART_S1_RDRF_MASK) {
-    serialData = UART2->D;
-		serialReady = 1;
+		serialData = UART2->D;
+		osSemaphoreRelease(serialFlag);
+		//serialReady = 1;
   }
 }
 

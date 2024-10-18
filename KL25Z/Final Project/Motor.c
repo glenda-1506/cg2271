@@ -32,29 +32,8 @@ void SetMotorSpeed(Motor *motor, int speed){
 	*(motor->channelValue) = (uint32_t)((speed / 100.0) * MOTOR_MOD_VALUE);
 }
 
-uint8_t ConfigureGearSpeed(uint8_t gear){
-	switch (gear){
-		case 0:
-			return 25;
-			// fallthrough
-		
-		case 1:
-			return 50;
-			// fallthrough
-		
-		case 2:
-			return 75;
-			// fallthrough
-		
-		case 3:
-			return 100;
-			// fallthrough
-		
-		default:
-			return 0;
-		// fallthrough
-	}
-}
+uint8_t g_forwardGearSpeed[4] ={25,50,75,100};
+uint8_t g_turnGearSpeed[4] ={20,40,60,80};
 
 void ConfigureRemoteXY(){
 	uint8_t motorControls = serialData & 0b1111; // keep lower 4 bits
@@ -69,8 +48,8 @@ void ConfigureRemoteXY(){
 	g_controls.right = (checkLR == 2)? 1:0;
 	g_controls.forwardGear = gearControls & 0b11;
 	g_controls.turnGear = (gearControls >> 2) & 0b11;
-	g_controls.forwardSpeed = ConfigureGearSpeed(g_controls.forwardGear);
-	g_controls.turnSpeed = ConfigureGearSpeed(g_controls.turnGear);
+	g_controls.forwardSpeed = g_forwardGearSpeed[g_controls.forwardGear];
+	g_controls.turnSpeed = g_turnGearSpeed[g_controls.turnGear];
 	g_controls.stop = (motorControls == 0) ? 1:0;
 	g_controls.complete = (motorControls == 0b1111) ? 1:0;
 }
@@ -113,7 +92,6 @@ uint8_t Stop(){
 }
 
 uint8_t HandleMovement(){
-	ConfigureRemoteXY();
 	return MoveForward() || MoveBackward() || Stop();
 }
 
@@ -138,12 +116,13 @@ void InitMotor() {
 	}	
 	TPM0->MOD = MOTOR_MOD_VALUE;
 	
-	// Enable IRQ for TPM0
+	/* Enable IRQ for TPM0
 	NVIC_SetPriority(TPM0_IRQn, 2);
   NVIC_ClearPendingIRQ(TPM0_IRQn);
   NVIC_EnableIRQ(TPM0_IRQn);
+	*/
 }
-
+/*
 void TPM0_IRQHandler(){
 	NVIC_ClearPendingIRQ(TPM0_IRQn);
 	if (TPM0->SC & TPM_SC_TOF_MASK) {
@@ -154,4 +133,5 @@ void TPM0_IRQHandler(){
 	}
 	TPM0->SC |= TPM_SC_TOF_MASK;
 }
+*/
 
