@@ -26,13 +26,41 @@
 #define B1 3   // PTB3
 
 // Define Motor Constants
-#define MOTOR_LEFT_RED     1 //PTC1
-#define MOTOR_RIGHT_RED    2 //PTC2
-#define MOTOR_LEFT_BLACK   8 //PTC8
-#define MOTOR_RIGHT_BLACK  9 //PTC9
 #define TIMER_PRESCALER 5
 #define MOTOR_MOD_VALUE 30000 // assuming a 50kHz PWM Frequency
-#define MAX_MOTOR_SPEED 80 // range 0 - 100
+#define MAX_MOTOR_SPEED 100 // range 0 - 100
+#define LEFT_RED     0 
+#define RIGHT_RED    1 
+#define LEFT_BLACK   2 
+#define RIGHT_BLACK  3 
+
+typedef struct {
+	int pin;
+	volatile uint32_t *channelStatusControl;
+	volatile uint32_t *channelValue;
+} MotorWire;
+
+const MotorWire MOTOR_WIRE[4] = {
+	{1, &TPM0_C0SC, &TPM0_C0V}, //PTC1 - LEFT_RED
+	{2, &TPM0_C1SC, &TPM0_C1V}, //PTC2 - RGHT_RED
+	{8, &TPM0_C4SC, &TPM0_C4V}, //PTC8 - LEFT_BLACK
+	{9, &TPM0_C5SC, &TPM0_C5V}  //PTC9 - RIGHT_BLACK
+};
+
+const uint8_t GEAR_SPEED[4] = {25,50,75,100};
+
+typedef struct {
+	uint8_t forward;
+	uint8_t backward;
+	uint8_t left;
+	uint8_t right;
+	uint8_t forwardSpeed;
+	uint8_t turnSpeed;
+	uint8_t forwardGear;
+	uint8_t turnGear;
+	uint8_t stop;
+	uint8_t complete;
+} RemoteXY;
 
 // Define Buzzer Constants
 #define PTB0_Pin 0 
