@@ -31,7 +31,7 @@ uint8_t MoveForward(){
 												*	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.right));
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], leftMotorSpeed); 
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], rightMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], 0);
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], 0);
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], 0);
 		return 1;
 	}
@@ -46,7 +46,7 @@ uint8_t MoveBackward(){
 												*	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.right));
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], leftMotorSpeed); 
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], rightMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], 0);
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], 0);
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], 0);
 		return 1;
 	}
@@ -58,7 +58,7 @@ uint8_t RotateLeft(){
 		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.turnSpeed) / 100); 
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], speed); 
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], speed);
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], 0);
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], 0);
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], 0);
 		return 1;
 	}
