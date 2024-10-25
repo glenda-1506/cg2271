@@ -18,6 +18,7 @@ void InitRTOX() {
  *---------------------------------------------------------------------------*/
 void buzzer_thread (void *argument) {
   // ...
+
   for (;;) {
 		playSong();
 	}
@@ -28,6 +29,7 @@ void buzzer_thread (void *argument) {
  *---------------------------------------------------------------------------*/
 void serial_thread (void *argument) {
   // ...
+	
   for (;;) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		ConfigureRemoteXY();
@@ -41,6 +43,7 @@ void serial_thread (void *argument) {
  *---------------------------------------------------------------------------*/
 void motor_thread (void *argument) {
   // ...
+	
   for (;;) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		ConfigureRemoteXY();
@@ -50,19 +53,31 @@ void motor_thread (void *argument) {
 	}
 }
 
+/*----------------------------------------------------------------------------
+ * LED Control
+ *---------------------------------------------------------------------------*/
+void led_thread (void *argument) {
+  // ...
+	InitLed();
+  for (;;) {
+		// do something
+	}
+}
+
 int main (void) {
  
   // System Initialization
   SystemCoreClockUpdate();
-	//InitLed();
-	InitBuzzer();
+	InitRTOX();
 	InitSerial(9600);
 	InitMotor();
-	InitRTOX();
+	InitBuzzer();
+	
   // ...
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
-  //osThreadNew(buzzer_thread, NULL, NULL);
+  osThreadNew(buzzer_thread, NULL, NULL);
+	osThreadNew(led_thread, NULL, NULL);
 	osThreadNew(motor_thread, NULL, NULL);
   osKernelStart();                      // Start thread execution
   for (;;) {}

@@ -1,9 +1,8 @@
 #include "Constants.h"
 
 int g_frontLeds[10] = {F1,F2,F3,F4,F5,F6,F7,F8,F9,F10};
-volatile int g_isMoving = 0;
 volatile int g_currentFrontLed = 0;
-volatile int g_backLedCycle = 25; // amount of overflow for 1 second period [(clk freq / (PS * (1/0.5))] / 3750
+volatile int g_backLedCycle = 25; // amount of overflow for 1 second period [(clk freq / (PS * (1 / 0.5))] / 3750
 volatile int g_overflowCounter = 0;
 volatile int g_backLedIsOn = 1;
 volatile int g_ledOnTicker = 0;
@@ -19,39 +18,6 @@ void InitFrontLed(void) {
 		PORTC->PCR[g_frontLeds[i]] |= PORT_PCR_MUX(1);
 		PTC->PDDR |= MASK(g_frontLeds[i]);
 	}
-}
-
-void InitSwitch(void){
-	// enable clock for PortD
-  SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
-
-  /* Select GPIO and enable pull-up resistors and interrupts 
-  on falling edges of pin connected to switch    
-  */  
-  PORTD->PCR[SW_POS] |= (PORT_PCR_MUX(1) |
-                         PORT_PCR_PS_MASK |
-                         PORT_PCR_PE_MASK |
-                         PORT_PCR_IRQC(0x0a));
-
-  // Set PORT D Switch bit to input
-  PTD->PDDR &= ~MASK(SW_POS);
-
-  // Enable the Interrupts
-  NVIC_SetPriority(PORTD_IRQn, 2);
-  NVIC_ClearPendingIRQ(PORTD_IRQn);
-  NVIC_EnableIRQ(PORTD_IRQn);  
-}
-
-void PORTD_IRQHandler(){
-  // Clear Pending IRQ
-  NVIC_ClearPendingIRQ(PORTD_IRQn);
-
-  // Update some variables / flag
-  g_isMoving = !g_isMoving;
-	g_isMoving ? (g_backLedCycle = 50):(g_backLedCycle = 25);
-
-  // Clear INT Flag
-  PORTD->ISFR |= MASK(SW_POS);
 }
 
 void OnFrontLed(int led){
@@ -72,22 +38,6 @@ void OffAllFrontLeds(){
 	for (int i = 0; i < 10; i++){
 		OffFrontLed(g_frontLeds[i]);
 	}
-}
-
-void HandleFrontLeds(){
-	if (g_isMoving){
-		if (g_ledOnTicker == 0){
-			OffAllFrontLeds();
-			OnFrontLed(g_frontLeds[g_currentFrontLed]);
-			g_ledOnTicker = 10;
-		} else {
-			g_ledOnTicker--;
-		}
-	} else {
-		OnAllFrontLeds();
-		g_currentFrontLed = -1;
-	}
-	g_currentFrontLed = (g_currentFrontLed + 1) % 10;
 }
 
 void InitLed(){
@@ -125,8 +75,25 @@ void InitLed(){
   NVIC_EnableIRQ(TPM2_IRQn);
 }
 
+void HandleFrontLeds(){
+	if (!g_controls.stop){
+		if (g_ledOnTicker == 0){
+			OffAllFrontLeds();
+			OnFrontLed(g_frontLeds[g_currentFrontLed]);
+			g_ledOnTicker = 10;
+		} else {
+			g_ledOnTicker--;
+		}
+	} else {
+		OnAllFrontLeds();
+		g_currentFrontLed = -1;
+	}
+	g_currentFrontLed = (g_currentFrontLed + 1) % 10;
+}
+
 void TPM2_IRQHandler(){
 	NVIC_ClearPendingIRQ(TPM2_IRQn); // clear pending interrupts
+	g_controls.stop ? (g_backLedCycle = 25):(g_backLedCycle = 50);
 	g_overflowCounter++;
 	HandleFrontLeds();
 	

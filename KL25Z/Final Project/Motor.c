@@ -1,7 +1,5 @@
 #include "Constants.h"
 
-volatile RemoteXY g_controls;
-
 void ConfigureRemoteXY(){
 	uint8_t motorControls = serialData & 0b1111; // keep lower 4 bits
 	uint8_t checkFB = motorControls & 0b11;

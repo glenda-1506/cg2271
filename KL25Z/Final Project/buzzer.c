@@ -51,7 +51,7 @@ void playSong(){
 		setFrequency(song[i].frequency); 
     setDuration(song[i].beats); 
     TPM1_C0V = 0; // Stop the sound between notes 
-    osDelay(100);
+    osDelay(10);
   } 
 } 
 

@@ -29,10 +29,12 @@
 #define TIMER_PRESCALER 5
 #define MOTOR_MOD_VALUE 30000 // assuming a 50kHz PWM Frequency
 #define MAX_MOTOR_SPEED 100 // range 0 - 100
-#define LEFT_RED     0 
-#define RIGHT_RED    1 
-#define LEFT_BLACK   2 
-#define RIGHT_BLACK  3 
+
+// Indexes for MOTOR_WIRE Array
+#define LEFT_BLACK   0
+#define RIGHT_BLACK  1 
+#define LEFT_RED     2 
+#define RIGHT_RED    3
 
 typedef struct {
 	int pin;
@@ -41,13 +43,13 @@ typedef struct {
 } MotorWire;
 
 const MotorWire MOTOR_WIRE[4] = {
-	{1, &TPM0_C0SC, &TPM0_C0V}, //PTC1 - LEFT_RED
-	{2, &TPM0_C1SC, &TPM0_C1V}, //PTC2 - RGHT_RED
-	{8, &TPM0_C4SC, &TPM0_C4V}, //PTC8 - LEFT_BLACK
-	{9, &TPM0_C5SC, &TPM0_C5V}  //PTC9 - RIGHT_BLACK
+	{1, &TPM0_C0SC, &TPM0_C0V}, // PTC1 - LEFT_RED
+	{2, &TPM0_C1SC, &TPM0_C1V}, // PTC2 - RIGHT_BLACK
+	{8, &TPM0_C4SC, &TPM0_C4V}, // PTC8 - LEFT_BLACK
+	{9, &TPM0_C5SC, &TPM0_C5V}  // PTC9 - RIGHT_RED
 };
 
-const uint8_t GEAR_SPEED[4] = {25,50,75,100};
+const uint8_t GEAR_SPEED[4] = {40,60,75,100};
 
 typedef struct {
 	uint8_t forward;
@@ -62,9 +64,11 @@ typedef struct {
 	uint8_t complete;
 } RemoteXY;
 
+volatile RemoteXY g_controls;
+
 // Define Buzzer Constants
 #define PTB0_Pin 0 
-#define BPM 120 
+#define BPM 240 
 #define NOTE_C1  32.70 
 #define NOTE_CS1 34.65 
 #define NOTE_D1  36.71 
@@ -151,7 +155,7 @@ typedef struct {
 #define NOTE_B7  3951.07 
 #define NOTE_C8  4186.01 
 #define REST      0 
-#define BEAT_DURATION (60000.0/BPM) //duration for an eighth note 
+#define BEAT_DURATION (30000.0/BPM) //duration for an eighth note 
  
 // Define all other constants
 #define MASK(x) (1 << (x))
