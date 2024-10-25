@@ -24,37 +24,37 @@ void SetMotorSpeed(const MotorWire *MOTOR_WIRE, int speed){
 }
 
 uint8_t MoveForward(){
-	if (g_controls.forward == 1){
+	if (g_controls.forward){
 		int leftMotorSpeed = (int)(MAX_MOTOR_SPEED * ((float)g_controls.forwardSpeed / 100)
-											 *	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.left));
+											 *	(((float)(g_controls.turnSpeed) / 100) * g_controls.left) * (1.0 - TURN_RADIUS));
 		int rightMotorSpeed = (int)(MAX_MOTOR_SPEED * ((float)g_controls.forwardSpeed / 100)
-												*	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.right));
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], leftMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], rightMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], 0);
-		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], 0);
+												*	(((float)(g_controls.turnSpeed) / 100) * g_controls.right) * (1.0 - TURN_RADIUS));
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], ((g_controls.left) ? 0 : leftMotorSpeed));
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], ((g_controls.left) ? leftMotorSpeed : 0));
+		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], ((g_controls.right) ? 0 : rightMotorSpeed));
+		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], ((g_controls.right) ? rightMotorSpeed : 0));
 		return 1;
 	}
 	return 0;
 }
 
 uint8_t MoveBackward(){
-	if (g_controls.backward == 1){
+	if (g_controls.backward){
 		int leftMotorSpeed = (int)(MAX_MOTOR_SPEED * ((float)g_controls.forwardSpeed / 100)
-											 *	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.left));
+											 *	(((float)(g_controls.turnSpeed) / 100) * g_controls.left) * (1.0 - TURN_RADIUS));
 		int rightMotorSpeed = (int)(MAX_MOTOR_SPEED * ((float)g_controls.forwardSpeed / 100)
-												*	(1 - ((float)(g_controls.turnSpeed) / 100) * g_controls.right));
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], leftMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], rightMotorSpeed); 
-		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], 0);
-		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], 0);
+												*	(((float)(g_controls.turnSpeed) / 100) * g_controls.right) * (1.0 - TURN_RADIUS));
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], ((g_controls.left) ? 0 : leftMotorSpeed)); 
+		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK],((g_controls.left) ? leftMotorSpeed : 0));
+		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK],((g_controls.right) ? 0 : rightMotorSpeed)); 
+		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], ((g_controls.right) ? rightMotorSpeed : 0));		
 		return 1;
 	}
 	return 0;
 }
 
 uint8_t RotateLeft(){
-	if (g_controls.left == 1) {
+	if (g_controls.left) {
 		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.turnSpeed) / 100); 
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], speed); 
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], speed);
@@ -66,7 +66,7 @@ uint8_t RotateLeft(){
 }
 
 uint8_t RotateRight(){
-	if (g_controls.right == 1) {
+	if (g_controls.right) {
 		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.turnSpeed) / 100); 
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], speed);
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], speed);

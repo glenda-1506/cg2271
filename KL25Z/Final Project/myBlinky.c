@@ -64,6 +64,9 @@ void led_thread (void *argument) {
 	}
 }
 
+/*----------------------------------------------------------------------------
+ * Main Loop
+ *---------------------------------------------------------------------------*/
 int main (void) {
  
   // System Initialization
@@ -82,3 +85,4 @@ int main (void) {
   osKernelStart();                      // Start thread execution
   for (;;) {}
 }
+
