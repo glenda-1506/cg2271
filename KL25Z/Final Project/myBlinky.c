@@ -46,7 +46,6 @@ void motor_thread (void *argument) {
 	
   for (;;) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
-		ConfigureRemoteXY();
 		HandleMovement();
 		osSemaphoreRelease(serialFlag);
 		osDelay(100);
@@ -79,7 +78,8 @@ int main (void) {
   // ...
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
-  osThreadNew(buzzer_thread, NULL, NULL);
+  osThreadNew(serial_thread, NULL, NULL);
+	osThreadNew(buzzer_thread, NULL, NULL);
 	osThreadNew(led_thread, NULL, NULL);
 	osThreadNew(motor_thread, NULL, NULL);
   osKernelStart();                      // Start thread execution
