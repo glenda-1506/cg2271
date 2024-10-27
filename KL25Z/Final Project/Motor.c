@@ -7,8 +7,8 @@ void SetMotorSpeed(const MotorWire *MOTOR_WIRE, int speed){
 int CalculateMotorSpeed(uint8_t turnState){
 	float forwardFactor = (float)g_controls.forwardSpeed / 100.0;
 	float turnFactor = 1.0 - TURN_RADIUS;
-	float turnAdjustment = 1.0 - (1.0 - (float)g_controls.turnSpeed / 100.0) * turnState;
-	return (int)(MAX_MOTOR_SPEED * forwardFactor * turnAdjustment * turnFactor);
+	float turnAdjustment = 1.0 - (1.0 - (float)g_controls.turnSpeed / 100.0) * turnState * turnFactor;
+	return (int)(MAX_MOTOR_SPEED * forwardFactor * turnAdjustment);
 }
 
 uint8_t MoveForward(){
