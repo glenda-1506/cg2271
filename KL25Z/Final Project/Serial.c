@@ -4,6 +4,25 @@ volatile uint8_t serialData = 0;
 volatile uint8_t serialReady = 0;
 osSemaphoreId_t serialFlag;
 
+void ConfigureRemoteXY(){
+	uint8_t motorControls = serialData & 0b1111; // keep lower 4 bits
+	uint8_t checkFB = motorControls & 0b11;
+	uint8_t checkLR = (motorControls >> 2) & 0b11;
+	uint8_t gearControls = serialData >> 4;
+	
+	// set all control variables
+	g_controls.forward = (checkFB == 1) ? 1:0;
+	g_controls.backward = (checkFB == 2) ? 1:0;
+	g_controls.left = (checkLR == 1) ? 1:0;
+	g_controls.right = (checkLR == 2)? 1:0;
+	g_controls.forwardGear = gearControls & 0b11;
+	g_controls.turnGear = (gearControls >> 2) & 0b11;
+	g_controls.forwardSpeed = GEAR_SPEED[g_controls.forwardGear];
+	g_controls.turnSpeed = GEAR_SPEED[g_controls.turnGear];
+	g_controls.stop = (motorControls == 0) ? 1:0;
+	g_controls.complete = (motorControls == 0b1111) ? 1:0;
+}
+
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	

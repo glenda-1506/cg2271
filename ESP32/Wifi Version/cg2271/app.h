@@ -128,26 +128,3 @@ void HandleControl(){
     prevData = currentData;
   }
 }
-/* DO NOT DELETE THE CODE BELOW
-
-void setup() 
-{
-  RemoteXY_Init (); 
-  
-  
-  // TODO you setup code
-  
-}
-
-
-void loop() 
-{ 
-  RemoteXY_Handler ();
-  
-  // TODO you loop code
-  // use the RemoteXY structure for data transfer
-  // do not call delay(), use instead RemoteXY_delay() 
-
-
-}
-*/

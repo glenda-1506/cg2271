@@ -29,11 +29,12 @@
 #define TIMER_PRESCALER 5
 #define MOTOR_MOD_VALUE 30000 // assuming a 50kHz PWM Frequency
 #define MAX_MOTOR_SPEED 100 // range 0 - 100
+#define TURN_RADIUS 0.5 // range 0 - 1 (bigger value == larger turn radius)
 
 // Indexes for MOTOR_WIRE Array
-#define LEFT_BLACK   0
+#define LEFT_RED     0
 #define RIGHT_BLACK  1 
-#define LEFT_RED     2 
+#define LEFT_BLACK   2 
 #define RIGHT_RED    3
 
 typedef struct {
@@ -49,7 +50,7 @@ const MotorWire MOTOR_WIRE[4] = {
 	{9, &TPM0_C5SC, &TPM0_C5V}  // PTC9 - RIGHT_RED
 };
 
-const uint8_t GEAR_SPEED[4] = {40,60,75,100};
+const uint8_t GEAR_SPEED[4] = {25,50,75,100};
 
 typedef struct {
 	uint8_t forward;

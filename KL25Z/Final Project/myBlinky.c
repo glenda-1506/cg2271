@@ -34,7 +34,7 @@ void serial_thread (void *argument) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		ConfigureRemoteXY();
 		osSemaphoreRelease(serialFlag);
-		osDelay(100);
+		osDelay(50);
 	}
 }
 
@@ -46,10 +46,9 @@ void motor_thread (void *argument) {
 	
   for (;;) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
-		ConfigureRemoteXY();
 		HandleMovement();
 		osSemaphoreRelease(serialFlag);
-		osDelay(100);
+		osDelay(50);
 	}
 }
 
@@ -64,6 +63,9 @@ void led_thread (void *argument) {
 	}
 }
 
+/*----------------------------------------------------------------------------
+ * Main Loop
+ *---------------------------------------------------------------------------*/
 int main (void) {
  
   // System Initialization
@@ -76,9 +78,11 @@ int main (void) {
   // ...
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
-  osThreadNew(buzzer_thread, NULL, NULL);
+  osThreadNew(serial_thread, NULL, NULL);
+	osThreadNew(buzzer_thread, NULL, NULL);
 	osThreadNew(led_thread, NULL, NULL);
 	osThreadNew(motor_thread, NULL, NULL);
   osKernelStart();                      // Start thread execution
   for (;;) {}
 }
+

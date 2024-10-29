@@ -93,7 +93,7 @@ void HandleFrontLeds(){
 
 void TPM2_IRQHandler(){
 	NVIC_ClearPendingIRQ(TPM2_IRQn); // clear pending interrupts
-	g_controls.stop ? (g_backLedCycle = 25):(g_backLedCycle = 50);
+	g_backLedCycle = g_controls.stop ? 25 : 50;
 	g_overflowCounter++;
 	HandleFrontLeds();
 	
