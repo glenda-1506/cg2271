@@ -29,7 +29,7 @@
 #define TIMER_PRESCALER 5
 #define MOTOR_MOD_VALUE 30000 // assuming a 50kHz PWM Frequency
 #define MAX_MOTOR_SPEED 100 // range 0 - 100
-#define TURN_RADIUS 0.0 // range 0 - 1 (bigger value == larger turn radius)
+#define TURN_RADIUS 0.5 // range 0 - 1 (bigger value == larger turn radius)
 
 // Indexes for MOTOR_WIRE Array
 #define LEFT_RED     0

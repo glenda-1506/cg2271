@@ -34,7 +34,7 @@ void serial_thread (void *argument) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		ConfigureRemoteXY();
 		osSemaphoreRelease(serialFlag);
-		osDelay(100);
+		osDelay(50);
 	}
 }
 
@@ -48,7 +48,7 @@ void motor_thread (void *argument) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		HandleMovement();
 		osSemaphoreRelease(serialFlag);
-		osDelay(100);
+		osDelay(50);
 	}
 }
 

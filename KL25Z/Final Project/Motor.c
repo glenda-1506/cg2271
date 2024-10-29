@@ -39,7 +39,7 @@ uint8_t MoveBackward(){
 
 uint8_t RotateAntiClockwise(){
 	if (g_controls.left) {
-		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.turnSpeed) / 100); 
+		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.forwardSpeed) / 100); 
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], speed); 
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_RED], speed);
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], 0);
@@ -51,7 +51,7 @@ uint8_t RotateAntiClockwise(){
 
 uint8_t RotateClockwise(){
 	if (g_controls.right) {
-		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.turnSpeed) / 100); 
+		int speed = (int)(MAX_MOTOR_SPEED * (float)(g_controls.forwardSpeed) / 100); 
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_BLACK], speed);
 		SetMotorSpeed(&MOTOR_WIRE[RIGHT_BLACK], speed);
 		SetMotorSpeed(&MOTOR_WIRE[LEFT_RED], 0);
