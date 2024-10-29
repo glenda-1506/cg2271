@@ -128,3 +128,42 @@ void HandleControl(){
     prevData = currentData;
   }
 }
+
+void HandleControlTrial(){
+  if ((RemoteXY.forward || RemoteXY.backward || RemoteXY.left || RemoteXY.right) && !isTiming) {
+    startTime = millis();
+    isTiming = true;
+  }
+
+  if (RemoteXY.resetTimer) {
+    isTiming = false;
+    RemoteXY.raceTime = 0;
+  }
+
+  if (isTiming) {
+    RemoteXY.raceTime = (millis() - startTime) / 1000;  // Elapsed time in seconds
+  }
+
+  uint8_t currentData = 0;
+  if (RemoteXY.complete){
+    isTiming = false;
+    for (int i=0;i<4;i++){
+      currentData |= MASK(i);
+    }   
+  } else if (RemoteXY.stop) {
+    for (int i=0;i<4;i++){
+      currentData &= ~MASK(i);
+    }
+  } else {
+    if (RemoteXY.forward) currentData |= MASK(0);
+    if (RemoteXY.backward) currentData |= MASK(1);
+    if (RemoteXY.left) currentData |= MASK(2);
+    if (RemoteXY.right) currentData |= MASK(3);
+  }
+  currentData |= (RemoteXY.forwardGear << 4); 
+  currentData |= (RemoteXY.turnGear << 6); 
+  Serial.print("Control Byte: ");
+  Serial.println(currentData, BIN);
+  itoa(currentData, RemoteXY.serialBinary, 2);
+  itoa(currentData, RemoteXY.serialValue, 10);
+}
