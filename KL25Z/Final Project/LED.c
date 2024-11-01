@@ -76,7 +76,7 @@ void InitLed(){
 }
 
 void HandleFrontLeds(){
-	if (!g_controls.stop){
+	if (!(g_controls.stop || g_controls.complete)){
 		if (g_ledOnTicker == 0){
 			OffAllFrontLeds();
 			OnFrontLed(g_frontLeds[g_currentFrontLed]);
@@ -93,7 +93,7 @@ void HandleFrontLeds(){
 
 void TPM2_IRQHandler(){
 	NVIC_ClearPendingIRQ(TPM2_IRQn); // clear pending interrupts
-	g_backLedCycle = g_controls.stop ? 25 : 50;
+	g_backLedCycle = (g_controls.stop || g_controls.complete) ? 25 : 50;
 	g_overflowCounter++;
 	HandleFrontLeds();
 	

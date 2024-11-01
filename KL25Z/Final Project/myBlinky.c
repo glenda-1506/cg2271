@@ -9,18 +9,39 @@
 osMutexId_t motorControlMutex;
 
 void InitRTOX() {
-    serialFlag = osSemaphoreNew(1, 0, NULL);
+    serialFlag = osSemaphoreNew(1, 1, NULL);
+		runningFlag = osSemaphoreNew(1,1,NULL);
+		endFlag = osSemaphoreNew(1,0,NULL);
     // motorControlMutex = osMutexNew(NULL);
 }
 
 /*----------------------------------------------------------------------------
  * Buzzer Control
  *---------------------------------------------------------------------------*/
-void buzzer_thread (void *argument) {
+void runningSong_thread (void *argument) {
   // ...
-
   for (;;) {
-		playSong();
+		for (int i = 0; i < sizeof(runningSong)/sizeof(Note); i++) { 
+			osSemaphoreAcquire(runningFlag, osWaitForever);
+			setFrequency(runningSong[i].frequency); 
+			setDuration(runningSong[i].beats); 
+			TPM1_C0V = 0; // Stop the sound between notes 
+			(g_controls.complete) ? osSemaphoreRelease(endFlag) : osSemaphoreRelease(runningFlag);
+			osDelay(10);
+		} 
+	}
+}
+
+void stopSong_thread(void *argument) {
+	for (;;) {
+		for (int i = 0; i < sizeof(stopSong)/sizeof(Note); i++) { 
+			osSemaphoreAcquire(endFlag, osWaitForever);
+			setFrequency(stopSong[i].frequency); 
+			setDuration(stopSong[i].beats); 
+			TPM1_C0V = 0; // Stop the sound between notes 
+			(g_controls.complete) ? osSemaphoreRelease(endFlag) : osSemaphoreRelease(runningFlag);
+			osDelay(10);
+		} 
 	}
 }
 
@@ -63,6 +84,10 @@ void led_thread (void *argument) {
 	}
 }
 
+const osThreadAttr_t thread1_attr = {
+  .priority = osPriorityHigh //Set initial thread priority to high   
+};
+
 /*----------------------------------------------------------------------------
  * Main Loop
  *---------------------------------------------------------------------------*/
@@ -70,16 +95,17 @@ int main (void) {
  
   // System Initialization
   SystemCoreClockUpdate();
-	InitRTOX();
 	InitSerial(9600);
 	InitMotor();
 	InitBuzzer();
 	
   // ...
  
-  osKernelInitialize();                 // Initialize CMSIS-RTOS
+  osKernelInitialize();  // Initialize CMSIS-RTOS
+	InitRTOX();               
   osThreadNew(serial_thread, NULL, NULL);
-	osThreadNew(buzzer_thread, NULL, NULL);
+	osThreadNew(runningSong_thread, NULL, NULL);
+	osThreadNew(stopSong_thread, NULL, NULL);
 	osThreadNew(led_thread, NULL, NULL);
 	osThreadNew(motor_thread, NULL, NULL);
   osKernelStart();                      // Start thread execution

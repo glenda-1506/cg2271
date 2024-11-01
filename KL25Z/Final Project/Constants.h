@@ -163,17 +163,5 @@ volatile RemoteXY g_controls;
 #define SW_POS 6 // PTD6
 #define MAX_DELAY 0x80000
 
-// Helper functions
-static void delay(volatile uint32_t milliseconds) {  
-  while(milliseconds != 0) {  
-    volatile uint32_t cycles = 375; // 1 ms delay with prescaler of 128
-    while(cycles != 0) {
-      __asm("NOP"); 
-      cycles--; 
-    }
-    milliseconds--; 
-  } 
-}
-
 #endif // CONSTANTS_H
 

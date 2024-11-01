@@ -10,13 +10,16 @@ quaver 2
 semiquaver 1 
 */ 
  
+osSemaphoreId_t runningFlag;
+osSemaphoreId_t endFlag;
+ 
 typedef struct { 
 	float frequency;   // Frequency of the note 
 	int beats; // Number of beats for the Duration of the note 
 } Note; 
 
 
-Note song[] = { 
+Note runningSong[] = { 
     {NOTE_E4, 4},
     {NOTE_B4, 2}, {NOTE_GS4, 2}, {NOTE_GS4, 4}, {NOTE_FS4, 2}, {NOTE_E4, 2}, {NOTE_E4, 2}, {NOTE_A4, 4},
     {NOTE_GS4, 2}, {NOTE_GS4, 2}, {NOTE_FS4, 2}, {NOTE_FS4, 2}, {NOTE_E4, 4},{NOTE_E4, 2},
@@ -26,6 +29,17 @@ Note song[] = {
 		{NOTE_GS4, 2}, {NOTE_GS4, 2}, {NOTE_FS4, 2}, {NOTE_FS4, 2}, {NOTE_E4, 2}, {NOTE_E4, 2}, {NOTE_B4, 2}, 
 		{NOTE_GS4, 2}, {NOTE_GS4, 2}, {NOTE_FS4, 4}, {NOTE_E4, 2}, {NOTE_E4, 2}, {NOTE_F4, 4}, 
 		{NOTE_CS4, 2}
+}; 
+
+Note stopSong[] = { 
+    {NOTE_C5, 4},{NOTE_D5, 4},
+    {NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 1}, {NOTE_F5, 1}, 
+		{REST, 1}, {NOTE_F5, 1},{NOTE_F5, 2}, {NOTE_C5, 2}, {NOTE_D5, 2}, 
+		{NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 1}, {NOTE_F5, 1},
+		{REST, 1}, {NOTE_F5, 1},{NOTE_F5, 2}, {NOTE_C5, 2}, {NOTE_D5, 2}, 		
+		{NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 1}, {NOTE_F5, 1},
+		{REST, 1}, {NOTE_F5, 1},{NOTE_F5, 2}, {NOTE_F5, 2}, {NOTE_F5, 2}, 		
+    {NOTE_E5, 8}
 }; 
  
  
@@ -37,7 +51,7 @@ void setFrequency(float frequency) {
      
   modValue = (uint16_t)(tpmClock / frequency); 
   TPM1->MOD = modValue; 
-  TPM1_C0V = modValue / 32; // 50% duty cycle 
+  TPM1_C0V = modValue / 8; // 50% duty cycle 
 } 
  
  
@@ -46,7 +60,7 @@ void setDuration(float beats) {
   osDelay(duration);
 } 
 
-void playSong(){ 
+void playSong(Note *song){ 
   for (int i = 0; i < sizeof(song)/sizeof(Note); i++) { 
 		setFrequency(song[i].frequency); 
     setDuration(song[i].beats); 
@@ -54,6 +68,16 @@ void playSong(){
     osDelay(10);
   } 
 } 
+
+/*
+void songControl(){
+	if (!g_controls.complete){
+		playSong(runningSong);
+	} else {
+		playSong(stopSong);
+	}
+}	
+*/
 
 void InitBuzzer() { 
 	// Enable clock for Port B 
