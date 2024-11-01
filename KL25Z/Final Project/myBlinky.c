@@ -9,7 +9,7 @@
 osMutexId_t motorControlMutex;
 
 void InitRTOX() {
-    serialFlag = osSemaphoreNew(1, 1, NULL);
+    serialFlag = osSemaphoreNew(1,0,NULL);
 		runningFlag = osSemaphoreNew(1,1,NULL);
 		endFlag = osSemaphoreNew(1,0,NULL);
     // motorControlMutex = osMutexNew(NULL);
@@ -68,7 +68,6 @@ void motor_thread (void *argument) {
   for (;;) {
 		osSemaphoreAcquire(serialFlag, osWaitForever);
 		HandleMovement();
-		osSemaphoreRelease(serialFlag);
 		osDelay(50);
 	}
 }
