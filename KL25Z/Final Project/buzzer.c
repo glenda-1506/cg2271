@@ -10,8 +10,7 @@ quaver 2
 semiquaver 1 
 */ 
  
-osSemaphoreId_t runningFlag;
-osSemaphoreId_t endFlag;
+
  
 typedef struct { 
 	float frequency;   // Frequency of the note 

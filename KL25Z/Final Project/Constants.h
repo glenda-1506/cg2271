@@ -5,9 +5,14 @@
 #include "RTE_Components.h"
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
-
-
 #include "MKL25Z4.h"    
+
+//RTOX constructs
+osSemaphoreId_t serialFlag;
+osSemaphoreId_t motorFlag;
+osSemaphoreId_t runningFlag;
+osSemaphoreId_t endFlag;
+
 
 // Define Serial Ports
 #define SERIAL_RX 23 // PTE23
@@ -50,7 +55,7 @@ const MotorWire MOTOR_WIRE[4] = {
 	{9, &TPM0_C5SC, &TPM0_C5V}  // PTC9 - RIGHT_RED
 };
 
-const uint8_t GEAR_SPEED[4] = {25,50,75,100};
+const uint8_t GEAR_SPEED[4] = {30,60,75,100};
 
 typedef struct {
 	uint8_t forward;

@@ -2,7 +2,7 @@
 
 volatile uint8_t serialData = 0; 
 volatile uint8_t serialReady = 0;
-osSemaphoreId_t serialFlag;
+
 
 void ConfigureRemoteXY(){
 	uint8_t motorControls = serialData & 0b1111; // keep lower 4 bits
@@ -21,15 +21,19 @@ void ConfigureRemoteXY(){
 	g_controls.turnSpeed = GEAR_SPEED[g_controls.turnGear];
 	g_controls.stop = (motorControls == 0) ? 1:0;
 	g_controls.complete = (motorControls == 0b1111) ? 1:0;
+	serialReady = 1;
 }
 
 void UART2_IRQHandler(void) {
   NVIC_ClearPendingIRQ(UART2_IRQn);
 	
   if (UART2->S1 & UART_S1_RDRF_MASK) {
-		serialData = UART2->D;
-		osSemaphoreRelease(serialFlag);
-		//serialReady = 1;
+		if (serialReady){
+			serialReady = 0;
+			serialData = UART2->D;
+			osSemaphoreRelease(serialFlag);
+			osDelay(10);
+		}
   }
 }
 
